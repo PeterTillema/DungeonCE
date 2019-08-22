@@ -19,16 +19,17 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
 #include <graphx.h>
 #include <keypadc.h>
 #include <debug.h>
+
 #include "menuandeditfunctions.h"
 #include "maingameloop.h"
 #include "xcollisiondetection.h"
 
 #include "structs.h"
 #include "gfx/dungeon.h"
-//#include "gfx/dungeon2.h"
 #include "gfx/tiles_gfx.h"
 #include "main.h"
 #include "minimap.h"
@@ -36,11 +37,6 @@
 /* Put all your globals here */
 int menuyes;
 int menuoption;
-int textcolor = (0xE6);
-int accentcolor = (0x80);
-int menucolor = (0x00);
-int submenucolor = (0x4A);
-int transcolor = (0xF8);
 
 
 int mapshift;
@@ -50,9 +46,8 @@ int mapstartx;
 int mapstarty;
 
 //for tilemap stuff
-
-#define Y_OFFSET            0
-#define X_OFFSET            0
+#define Y_OFFSET 0
+#define X_OFFSET 0
 
 //distance in pixels from top left of tilemap
 unsigned int tmap_pxl_x_offset;
@@ -99,6 +94,7 @@ weapon increases damage dealt
 
 
 void main(void) {
+	uint8_t i;
 
 	kb_key_t key;
 
@@ -132,20 +128,17 @@ void main(void) {
 	minimapTilemap.width = TILEMAP_WIDTH;
 
 	// generate all the scaled sprites for the minimap tileset cache
-	{
-		uint8_t i;
-		for (i = 0; i < tileset_tiles_num; i++) {
-			minimapTilesetPointers[i] = &minimapTileset[i][0];
-			minimapTileset[i][0] = MINIMAP_TILE_SIZE;
-			minimapTileset[i][1] = MINIMAP_TILE_SIZE;
+	for (i = 0; i < tileset_tiles_num; i++) {
+		minimapTilesetPointers[i] = &minimapTileset[i][0];
+		minimapTileset[i][0] = MINIMAP_TILE_SIZE;
+		minimapTileset[i][1] = MINIMAP_TILE_SIZE;
 
-			gfx_ScaleSprite(tilemap.tiles[i], (gfx_sprite_t *) minimapTileset[i]);
-		}
+		gfx_ScaleSprite(tilemap.tiles[i], (gfx_sprite_t *) minimapTileset[i]);
 	}
 
 	gfx_Begin();
 	gfx_SetPalette(tiles_gfx_pal, sizeof_tiles_gfx_pal, 0);
-	gfx_SetTransparentColor(transcolor);
+	gfx_SetTransparentColor(TRANSP_COLOR);
 	kb_SetMode(MODE_3_CONTINUOUS);
 	//gfx_SetTextConfig(1);
 

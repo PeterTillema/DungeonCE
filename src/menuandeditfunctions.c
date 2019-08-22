@@ -1,11 +1,3 @@
-#include "menuandeditfunctions.h"
-#include "maingameloop.h"
-#include "enemymovement.h"
-#include "gfx/dungeon.h"
-//#include "gfx/dungeon2.h"
-#include "gfx/dungeon_gfx.h"
-#include "structs.h"
-
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
@@ -20,15 +12,19 @@
 #include <graphx.h>
 #include <keypadc.h>
 
+#include "menuandeditfunctions.h"
+#include "maingameloop.h"
+#include "enemymovement.h"
+#include "gfx/dungeon.h"
+//#include "gfx/dungeon2.h"
+#include "gfx/dungeon_gfx.h"
+#include "structs.h"
+#include "main.h"
+
 
 extern int i;
 extern int menuoption;
 extern int menuyes;
-extern int textcolor;
-extern int menucolor;
-extern int submenucolor;
-extern int accentcolor;
-extern int transcolor;
 extern int playerface;
 int editweaponx = 90;
 int editweapony = 0;
@@ -75,7 +71,6 @@ extern uint16_t defaultboss_ylist[];
 gfx_sprite_t *enemySprite;
 
 int ii;
-int redcolor = 0xE8;
 int purchased[22];
 int inventory[22];
 int equipped[5];
@@ -89,13 +84,13 @@ void keywait(void) { while (kb_AnyKey()); }
 void mainmenu(void) {
 
 	gfx_SetDrawBuffer();
-	gfx_FillScreen(menucolor);
-	gfx_SetColor(accentcolor);
+	gfx_FillScreen(MENU_COLOR);
+	gfx_SetColor(ACCENT_COLOR);
 	gfx_Rectangle(0, 0, 320, 240);
 	gfx_Rectangle(2, 2, 316, 236);
 	gfx_ScaledTransparentSprite_NoClip(mainmenulogo, 33, 20, 2, 2);
 	gfx_SetTextScale(2, 2);
-	gfx_SetTextFGColor(textcolor);
+	gfx_SetTextFGColor(TEXT_COLOR);
 	gfx_PrintStringXY("1. Continue", 68, 120);
 	gfx_PrintStringXY("2. New Game", 68, 145);
 	gfx_PrintStringXY("3. Free Play", 68, 170);
@@ -129,9 +124,9 @@ void mainmenu(void) {
 void drawsavemenu(void) {
 
 	gfx_SetDrawBuffer();
-	gfx_SetColor(submenucolor);
+	gfx_SetColor(SUBMENU_COLOR);
 	gfx_FillRectangle(0, 154, 108, 66);
-	gfx_SetColor(accentcolor);
+	gfx_SetColor(ACCENT_COLOR);
 	gfx_Rectangle(0, 154, 108, 66);
 	gfx_Rectangle(2, 156, 104, 62);
 	submenubottombar();
@@ -190,24 +185,20 @@ void drawstore(void) {
 	//22
 	int price_large_potion = 150;
 
-
-	int selectedcolor = (0xE3);
-	int graycolor = (0xAC);
 	int cursorposition = 1;
 	int storepage = 1;
 	int storepane = 1;
 	int windowpress = 0;
-	extern int greencolor;
 	do {
 		gfx_SetDrawBuffer();
-		gfx_SetColor(submenucolor);
+		gfx_SetColor(SUBMENU_COLOR);
 		gfx_FillRectangle(140, 125, 150, 95);
-		gfx_SetColor(accentcolor);
+		gfx_SetColor(ACCENT_COLOR);
 		gfx_Rectangle(140, 125, 150, 95);
 		gfx_Rectangle(142, 127, 146, 91);
 		submenubottombar();
 		windowpress = 0;
-		gfx_SetTextFGColor(textcolor);
+		gfx_SetTextFGColor(TEXT_COLOR);
 		gfx_PrintStringXY("Money:  ", 150, 207);
 		gfx_PrintUInt(player_setup[7], sizeof(player_setup[7]));
 		gfx_PrintStringXY("<", 160, 228);
@@ -215,333 +206,333 @@ void drawstore(void) {
 		if (storepane == 1) {
 			gfx_PrintStringXY("ARMOR", 208, 228);
 			if (storepage == 1) {
-				if (cursorposition == 1) { gfx_SetTextFGColor(selectedcolor); }
+				if (cursorposition == 1) { gfx_SetTextFGColor(SELECTED_COLOR); }
 				else {
-					gfx_SetTextFGColor(textcolor);
+					gfx_SetTextFGColor(TEXT_COLOR);
 					if (price_leather_helmet > player_setup[7]) {
-						gfx_SetTextFGColor(redcolor);
+						gfx_SetTextFGColor(RED_COLOR);
 					}
 					if (purchased[0] == 1) {
-						gfx_SetTextFGColor(greencolor);
+						gfx_SetTextFGColor(GREEN_COLOR);
 					}
 				}
 				gfx_PrintStringXY("Leather Helmet    ", 150, 132);
 				gfx_PrintInt(price_leather_helmet, 2);
 
-				if (cursorposition == 2) { gfx_SetTextFGColor(selectedcolor); }
+				if (cursorposition == 2) { gfx_SetTextFGColor(SELECTED_COLOR); }
 				else {
-					gfx_SetTextFGColor(textcolor);
+					gfx_SetTextFGColor(TEXT_COLOR);
 					if (price_leather_tunic > player_setup[7]) {
-						gfx_SetTextFGColor(redcolor);
+						gfx_SetTextFGColor(RED_COLOR);
 					}
 					if (purchased[1] == 1) {
-						gfx_SetTextFGColor(greencolor);
+						gfx_SetTextFGColor(GREEN_COLOR);
 					}
 				}
 				gfx_PrintStringXY("Leather Tunic    ", 150, 147);
 				gfx_PrintInt(price_leather_tunic, 2);
 
-				if (cursorposition == 3) { gfx_SetTextFGColor(selectedcolor); }
+				if (cursorposition == 3) { gfx_SetTextFGColor(SELECTED_COLOR); }
 				else {
-					gfx_SetTextFGColor(textcolor);
+					gfx_SetTextFGColor(TEXT_COLOR);
 					if (price_leather_boots > player_setup[7]) {
-						gfx_SetTextFGColor(redcolor);
+						gfx_SetTextFGColor(RED_COLOR);
 					}
 					if (purchased[2] == 1) {
-						gfx_SetTextFGColor(greencolor);
+						gfx_SetTextFGColor(GREEN_COLOR);
 					}
 				}
 				gfx_PrintStringXY("Leather Boots    ", 150, 162);
 				gfx_PrintInt(price_leather_boots, 2);
 
-				if (cursorposition == 4) { gfx_SetTextFGColor(selectedcolor); }
+				if (cursorposition == 4) { gfx_SetTextFGColor(SELECTED_COLOR); }
 				else {
-					gfx_SetTextFGColor(textcolor);
+					gfx_SetTextFGColor(TEXT_COLOR);
 					if (price_iron_helmet > player_setup[7]) {
-						gfx_SetTextFGColor(redcolor);
+						gfx_SetTextFGColor(RED_COLOR);
 					}
 					if (purchased[3] == 1) {
-						gfx_SetTextFGColor(greencolor);
+						gfx_SetTextFGColor(GREEN_COLOR);
 					}
 				}
 				gfx_PrintStringXY("Iron Helmet    ", 150, 177);
 				gfx_PrintInt(price_iron_helmet, 2);
 
-				if (cursorposition == 5) { gfx_SetTextFGColor(selectedcolor); }
+				if (cursorposition == 5) { gfx_SetTextFGColor(SELECTED_COLOR); }
 				else {
-					gfx_SetTextFGColor(textcolor);
+					gfx_SetTextFGColor(TEXT_COLOR);
 					if (price_chain_shirt > player_setup[7]) {
-						gfx_SetTextFGColor(redcolor);
+						gfx_SetTextFGColor(RED_COLOR);
 					}
 					if (purchased[4] == 1) {
-						gfx_SetTextFGColor(greencolor);
+						gfx_SetTextFGColor(GREEN_COLOR);
 					}
 				}
 				gfx_PrintStringXY("Chain Shirt    ", 150, 192);
 				gfx_PrintInt(price_chain_shirt, 2);
 			}
 			if (storepage == 2) {
-				if (cursorposition == 1) { gfx_SetTextFGColor(selectedcolor); }
+				if (cursorposition == 1) { gfx_SetTextFGColor(SELECTED_COLOR); }
 				else {
-					gfx_SetTextFGColor(textcolor);
+					gfx_SetTextFGColor(TEXT_COLOR);
 					if (price_chain_boots > player_setup[7]) {
-						gfx_SetTextFGColor(redcolor);
+						gfx_SetTextFGColor(RED_COLOR);
 					}
 					if (purchased[5] == 1) {
-						gfx_SetTextFGColor(greencolor);
+						gfx_SetTextFGColor(GREEN_COLOR);
 					}
 				}
 				gfx_PrintStringXY("Chain Boots    ", 150, 132);
 				gfx_PrintInt(price_chain_boots, 2);
 
-				if (cursorposition == 2) { gfx_SetTextFGColor(selectedcolor); }
+				if (cursorposition == 2) { gfx_SetTextFGColor(SELECTED_COLOR); }
 				else {
-					gfx_SetTextFGColor(textcolor);
+					gfx_SetTextFGColor(TEXT_COLOR);
 					if (price_steel_helmet > player_setup[7]) {
-						gfx_SetTextFGColor(redcolor);
+						gfx_SetTextFGColor(RED_COLOR);
 					}
 					if (purchased[6] == 1) {
-						gfx_SetTextFGColor(greencolor);
+						gfx_SetTextFGColor(GREEN_COLOR);
 					}
 				}
 				gfx_PrintStringXY("Steel Helmet    ", 150, 147);
 				gfx_PrintInt(price_steel_helmet, 3);
 
-				if (cursorposition == 3) { gfx_SetTextFGColor(selectedcolor); }
+				if (cursorposition == 3) { gfx_SetTextFGColor(SELECTED_COLOR); }
 				else {
-					gfx_SetTextFGColor(textcolor);
+					gfx_SetTextFGColor(TEXT_COLOR);
 					if (price_steel_chestplate > player_setup[7]) {
-						gfx_SetTextFGColor(redcolor);
+						gfx_SetTextFGColor(RED_COLOR);
 					}
 					if (purchased[7] == 1) {
-						gfx_SetTextFGColor(greencolor);
+						gfx_SetTextFGColor(GREEN_COLOR);
 					}
 				}
 				gfx_PrintStringXY("Steel Chest   ", 150, 162);
 				gfx_PrintInt(price_steel_chestplate, 3);
 
-				if (cursorposition == 4) { gfx_SetTextFGColor(selectedcolor); }
+				if (cursorposition == 4) { gfx_SetTextFGColor(SELECTED_COLOR); }
 				else {
-					gfx_SetTextFGColor(textcolor);
+					gfx_SetTextFGColor(TEXT_COLOR);
 					if (price_steel_boots > player_setup[7]) {
-						gfx_SetTextFGColor(redcolor);
+						gfx_SetTextFGColor(RED_COLOR);
 					}
 					if (purchased[8] == 1) {
-						gfx_SetTextFGColor(greencolor);
+						gfx_SetTextFGColor(GREEN_COLOR);
 					}
 				}
 				gfx_PrintStringXY("Steel Boots    ", 150, 177);
 				gfx_PrintInt(price_steel_boots, 3);
 
-				if (cursorposition == 5) { gfx_SetTextFGColor(selectedcolor); }
+				if (cursorposition == 5) { gfx_SetTextFGColor(SELECTED_COLOR); }
 				else {
-					gfx_SetTextFGColor(textcolor);
+					gfx_SetTextFGColor(TEXT_COLOR);
 					if (price_dragon_helmet > player_setup[7]) {
-						gfx_SetTextFGColor(redcolor);
+						gfx_SetTextFGColor(RED_COLOR);
 					}
 					if (purchased[9] == 1) {
-						gfx_SetTextFGColor(greencolor);
+						gfx_SetTextFGColor(GREEN_COLOR);
 					}
 				}
 				gfx_PrintStringXY("Dragon Helmet    ", 150, 192);
 			}
 			gfx_PrintInt(price_dragon_helmet, 3);
 			if (storepage == 3) {
-				if (cursorposition == 1) { gfx_SetTextFGColor(selectedcolor); }
+				if (cursorposition == 1) { gfx_SetTextFGColor(SELECTED_COLOR); }
 				else {
-					gfx_SetTextFGColor(textcolor);
+					gfx_SetTextFGColor(TEXT_COLOR);
 					if (price_dragon_chestplate > player_setup[7]) {
-						gfx_SetTextFGColor(redcolor);
+						gfx_SetTextFGColor(RED_COLOR);
 					}
 					if (purchased[10] == 1) {
-						gfx_SetTextFGColor(greencolor);
+						gfx_SetTextFGColor(GREEN_COLOR);
 					}
 				}
 				gfx_PrintStringXY("Dragon Chest    ", 150, 132);
 				gfx_PrintInt(price_dragon_chestplate, 3);
 
-				if (cursorposition == 2) { gfx_SetTextFGColor(selectedcolor); }
+				if (cursorposition == 2) { gfx_SetTextFGColor(SELECTED_COLOR); }
 				else {
-					gfx_SetTextFGColor(textcolor);
+					gfx_SetTextFGColor(TEXT_COLOR);
 					if (price_dragon_boots > player_setup[7]) {
-						gfx_SetTextFGColor(redcolor);
+						gfx_SetTextFGColor(RED_COLOR);
 					}
 					if (purchased[11] == 1) {
-						gfx_SetTextFGColor(greencolor);
+						gfx_SetTextFGColor(GREEN_COLOR);
 					}
 				}
 				gfx_PrintStringXY("Dragon Boots    ", 150, 147);
 				gfx_PrintInt(price_dragon_boots, 3);
 
-				if (cursorposition == 3) { gfx_SetTextFGColor(selectedcolor); }
-				else { gfx_SetTextFGColor(graycolor); }
+				if (cursorposition == 3) { gfx_SetTextFGColor(SELECTED_COLOR); }
+				else { gfx_SetTextFGColor(GRAY_COLOR); }
 				gfx_PrintStringXY("--------", 150, 162);
 
-				if (cursorposition == 4) { gfx_SetTextFGColor(selectedcolor); }
-				else { gfx_SetTextFGColor(graycolor); }
+				if (cursorposition == 4) { gfx_SetTextFGColor(SELECTED_COLOR); }
+				else { gfx_SetTextFGColor(GRAY_COLOR); }
 				gfx_PrintStringXY("--------", 150, 177);
 
-				if (cursorposition == 5) { gfx_SetTextFGColor(selectedcolor); }
-				else { gfx_SetTextFGColor(graycolor); }
+				if (cursorposition == 5) { gfx_SetTextFGColor(SELECTED_COLOR); }
+				else { gfx_SetTextFGColor(GRAY_COLOR); }
 				gfx_PrintStringXY("--------", 150, 192);
 			}
 		}
 		if (storepane == 2) {
 			gfx_PrintStringXY("WEAPONS", 203, 228);
 			if (storepage == 1) {
-				if (cursorposition == 1) { gfx_SetTextFGColor(selectedcolor); }
+				if (cursorposition == 1) { gfx_SetTextFGColor(SELECTED_COLOR); }
 				else {
-					gfx_SetTextFGColor(textcolor);
+					gfx_SetTextFGColor(TEXT_COLOR);
 				}
 				if (price_club > player_setup[7]) {
-					gfx_SetTextFGColor(redcolor);
+					gfx_SetTextFGColor(RED_COLOR);
 				}
 				if (purchased[12] == 1) {
-					gfx_SetTextFGColor(greencolor);
+					gfx_SetTextFGColor(GREEN_COLOR);
 				}
 				gfx_PrintStringXY("Club    ", 150, 132);
 				gfx_PrintInt(price_club, 2);
 
-				if (cursorposition == 2) { gfx_SetTextFGColor(selectedcolor); }
+				if (cursorposition == 2) { gfx_SetTextFGColor(SELECTED_COLOR); }
 				else {
-					gfx_SetTextFGColor(textcolor);
+					gfx_SetTextFGColor(TEXT_COLOR);
 				}
 				if (price_iron_sword > player_setup[7]) {
-					gfx_SetTextFGColor(redcolor);
+					gfx_SetTextFGColor(RED_COLOR);
 				}
 				if (purchased[13] == 1) {
-					gfx_SetTextFGColor(greencolor);
+					gfx_SetTextFGColor(GREEN_COLOR);
 				}
 				gfx_PrintStringXY("Iron Sword    ", 150, 147);
 				gfx_PrintInt(price_iron_sword, 2);
 
-				if (cursorposition == 3) { gfx_SetTextFGColor(selectedcolor); }
+				if (cursorposition == 3) { gfx_SetTextFGColor(SELECTED_COLOR); }
 				else {
-					gfx_SetTextFGColor(textcolor);
+					gfx_SetTextFGColor(TEXT_COLOR);
 				}
 				if (price_steel_sword > player_setup[7]) {
-					gfx_SetTextFGColor(redcolor);
+					gfx_SetTextFGColor(RED_COLOR);
 				}
 				if (purchased[14] == 1) {
-					gfx_SetTextFGColor(greencolor);
+					gfx_SetTextFGColor(GREEN_COLOR);
 				}
 				gfx_PrintStringXY("Steel Sword    ", 150, 162);
 				gfx_PrintInt(price_steel_sword, 3);
 
-				if (cursorposition == 4) { gfx_SetTextFGColor(selectedcolor); }
+				if (cursorposition == 4) { gfx_SetTextFGColor(SELECTED_COLOR); }
 				else {
-					gfx_SetTextFGColor(textcolor);
+					gfx_SetTextFGColor(TEXT_COLOR);
 				}
 				if (price_dragon_sword > player_setup[7]) {
-					gfx_SetTextFGColor(redcolor);
+					gfx_SetTextFGColor(RED_COLOR);
 				}
 				if (purchased[15] == 1) {
-					gfx_SetTextFGColor(greencolor);
+					gfx_SetTextFGColor(GREEN_COLOR);
 				}
 				gfx_PrintStringXY("Dragon Sword    ", 150, 177);
 				gfx_PrintInt(price_dragon_sword, 4);
 
-				if (cursorposition == 5) { gfx_SetTextFGColor(selectedcolor); }
+				if (cursorposition == 5) { gfx_SetTextFGColor(SELECTED_COLOR); }
 				else {
-					gfx_SetTextFGColor(textcolor);
+					gfx_SetTextFGColor(TEXT_COLOR);
 				}
 				if (price_basic_bow > player_setup[7]) {
-					gfx_SetTextFGColor(redcolor);
+					gfx_SetTextFGColor(RED_COLOR);
 				}
 				if (purchased[16] == 1) {
-					gfx_SetTextFGColor(greencolor);
+					gfx_SetTextFGColor(GREEN_COLOR);
 				}
 				gfx_PrintStringXY("Basic Bow    ", 150, 192);
 				gfx_PrintInt(price_basic_bow, 2);
 			}
 			if (storepage == 2) {
-				if (cursorposition == 1) { gfx_SetTextFGColor(selectedcolor); }
+				if (cursorposition == 1) { gfx_SetTextFGColor(SELECTED_COLOR); }
 				else {
-					gfx_SetTextFGColor(textcolor);
+					gfx_SetTextFGColor(TEXT_COLOR);
 				}
 				if (price_recurve_bow > player_setup[7]) {
-					gfx_SetTextFGColor(redcolor);
+					gfx_SetTextFGColor(RED_COLOR);
 				}
 				if (purchased[17] == 1) {
-					gfx_SetTextFGColor(greencolor);
+					gfx_SetTextFGColor(GREEN_COLOR);
 				}
 				gfx_PrintStringXY("Recurve Bow    ", 150, 132);
 				gfx_PrintInt(price_recurve_bow, 2);
 
-				if (cursorposition == 2) { gfx_SetTextFGColor(selectedcolor); }
+				if (cursorposition == 2) { gfx_SetTextFGColor(SELECTED_COLOR); }
 				else {
-					gfx_SetTextFGColor(textcolor);
+					gfx_SetTextFGColor(TEXT_COLOR);
 				}
 				if (price_compound_bow > player_setup[7]) {
-					gfx_SetTextFGColor(redcolor);
+					gfx_SetTextFGColor(RED_COLOR);
 				}
 				if (purchased[18] == 1) {
-					gfx_SetTextFGColor(greencolor);
+					gfx_SetTextFGColor(GREEN_COLOR);
 				}
 				gfx_PrintStringXY("Compound Bow    ", 150, 147);
 				gfx_PrintInt(price_compound_bow, 3);
 
-				if (cursorposition == 3) { gfx_SetTextFGColor(selectedcolor); }
+				if (cursorposition == 3) { gfx_SetTextFGColor(SELECTED_COLOR); }
 				else {
-					gfx_SetTextFGColor(textcolor);
+					gfx_SetTextFGColor(TEXT_COLOR);
 				}
 				if (price_dragon_bow > player_setup[7]) {
-					gfx_SetTextFGColor(redcolor);
+					gfx_SetTextFGColor(RED_COLOR);
 				}
 				if (purchased[19] == 1) {
-					gfx_SetTextFGColor(greencolor);
+					gfx_SetTextFGColor(GREEN_COLOR);
 				}
 				gfx_PrintStringXY("Dragon Bow    ", 150, 162);
 				gfx_PrintInt(price_dragon_bow, 3);
 
-				if (cursorposition == 4) { gfx_SetTextFGColor(selectedcolor); }
-				else { gfx_SetTextFGColor(graycolor); }
+				if (cursorposition == 4) { gfx_SetTextFGColor(SELECTED_COLOR); }
+				else { gfx_SetTextFGColor(GRAY_COLOR); }
 				gfx_PrintStringXY("--------", 150, 177);
 
-				if (cursorposition == 5) { gfx_SetTextFGColor(selectedcolor); }
-				else { gfx_SetTextFGColor(graycolor); }
+				if (cursorposition == 5) { gfx_SetTextFGColor(SELECTED_COLOR); }
+				else { gfx_SetTextFGColor(GRAY_COLOR); }
 				gfx_PrintStringXY("--------", 150, 192);
 			}
 		}
 		if (storepane == 3) {
 			gfx_PrintStringXY("ITEMS", 208, 228);
 			if (storepage == 1) {
-				if (cursorposition == 1) { gfx_SetTextFGColor(selectedcolor); }
+				if (cursorposition == 1) { gfx_SetTextFGColor(SELECTED_COLOR); }
 				else {
-					gfx_SetTextFGColor(textcolor);
+					gfx_SetTextFGColor(TEXT_COLOR);
 				}
 				if (price_small_potion > player_setup[7]) {
-					gfx_SetTextFGColor(redcolor);
+					gfx_SetTextFGColor(RED_COLOR);
 				}
 				gfx_PrintStringXY("Small Potion    ", 150, 132);
 				gfx_PrintInt(price_small_potion, 2);
 
-				if (cursorposition == 2) { gfx_SetTextFGColor(selectedcolor); }
+				if (cursorposition == 2) { gfx_SetTextFGColor(SELECTED_COLOR); }
 				else {
-					gfx_SetTextFGColor(textcolor);
+					gfx_SetTextFGColor(TEXT_COLOR);
 				}
 				if (price_medium_potion > player_setup[7]) {
-					gfx_SetTextFGColor(redcolor);
+					gfx_SetTextFGColor(RED_COLOR);
 				}
 				gfx_PrintStringXY("Med. Potion    ", 150, 147);
 				gfx_PrintInt(price_medium_potion, 2);
 
-				if (cursorposition == 3) { gfx_SetTextFGColor(selectedcolor); }
+				if (cursorposition == 3) { gfx_SetTextFGColor(SELECTED_COLOR); }
 				else {
-					gfx_SetTextFGColor(textcolor);
+					gfx_SetTextFGColor(TEXT_COLOR);
 				}
 				if (price_large_potion > player_setup[7]) {
-					gfx_SetTextFGColor(redcolor);
+					gfx_SetTextFGColor(RED_COLOR);
 				}
 				gfx_PrintStringXY("Large Potion    ", 150, 162);
 				gfx_PrintInt(price_large_potion, 3);
 
-				if (cursorposition == 4) { gfx_SetTextFGColor(selectedcolor); }
-				else { gfx_SetTextFGColor(graycolor); }
+				if (cursorposition == 4) { gfx_SetTextFGColor(SELECTED_COLOR); }
+				else { gfx_SetTextFGColor(GRAY_COLOR); }
 				gfx_PrintStringXY("--------", 150, 177);
 
-				if (cursorposition == 5) { gfx_SetTextFGColor(selectedcolor); }
-				else { gfx_SetTextFGColor(graycolor); }
+				if (cursorposition == 5) { gfx_SetTextFGColor(SELECTED_COLOR); }
+				else { gfx_SetTextFGColor(GRAY_COLOR); }
 				gfx_PrintStringXY("--------", 150, 192);
 			}
 		}
@@ -767,9 +758,9 @@ void drawstatsmenu(void) {
 
 
 	gfx_SetDrawBuffer();
-	gfx_SetColor(submenucolor);
+	gfx_SetColor(SUBMENU_COLOR);
 	gfx_FillRectangle(140, 115, 150, 105);
-	gfx_SetColor(accentcolor);
+	gfx_SetColor(ACCENT_COLOR);
 	gfx_Rectangle(140, 115, 150, 105);
 	gfx_Rectangle(142, 117, 146, 101);
 	submenubottombar();
@@ -792,15 +783,14 @@ void drawstatsmenu(void) {
 }
 
 void drawoptions(void) {
-	int selectedcolor = (0xE3);
 	int cursorposition = 1;
 	int optionspage = 1;
 	int windowpress = 0;
 	do {
 		gfx_SetDrawBuffer();
-		gfx_SetColor(submenucolor);
+		gfx_SetColor(SUBMENU_COLOR);
 		gfx_FillRectangle(140, 125, 150, 95);
-		gfx_SetColor(accentcolor);
+		gfx_SetColor(ACCENT_COLOR);
 		gfx_Rectangle(140, 125, 150, 95);
 		gfx_Rectangle(142, 127, 146, 91);
 		submenubottombar();
@@ -808,23 +798,23 @@ void drawoptions(void) {
 		if (optionspage == 1) {
 
 
-			if (cursorposition == 1) { gfx_SetTextFGColor(selectedcolor); }
-			else { gfx_SetTextFGColor(textcolor); }
+			if (cursorposition == 1) { gfx_SetTextFGColor(SELECTED_COLOR); }
+			else { gfx_SetTextFGColor(TEXT_COLOR); }
 			gfx_PrintStringXY("Toggle Minimap", 145, 132);
 			if (showminimap == 1) { gfx_PrintStringXY("<ON>", 258, 132); }
 			if (showminimap == 0) { gfx_PrintStringXY("<OFF>", 250, 132); }
 
-			if (cursorposition == 2) { gfx_SetTextFGColor(selectedcolor); }
-			else { gfx_SetTextFGColor(textcolor); }
-			if (showminimap == 0) { gfx_SetTextFGColor(redcolor); }
+			if (cursorposition == 2) { gfx_SetTextFGColor(SELECTED_COLOR); }
+			else { gfx_SetTextFGColor(TEXT_COLOR); }
+			if (showminimap == 0) { gfx_SetTextFGColor(RED_COLOR); }
 			gfx_PrintStringXY("MM Position: ", 145, 147);
 			if (minimapposition == 1) { gfx_PrintStringXY("<Top L>", 239, 148); }
 			if (minimapposition == 2) { gfx_PrintStringXY("<Top R>", 239, 148); }
 			if (minimapposition == 3) { gfx_PrintStringXY("<Btm L>", 240, 148); }
 			if (minimapposition == 4) { gfx_PrintStringXY("<Btm R>", 240, 148); }
 
-			if (cursorposition == 3) { gfx_SetTextFGColor(selectedcolor); }
-			else { gfx_SetTextFGColor(textcolor); }
+			if (cursorposition == 3) { gfx_SetTextFGColor(SELECTED_COLOR); }
+			else { gfx_SetTextFGColor(TEXT_COLOR); }
 			gfx_PrintStringXY("MM Hotkey", 145, 162);
 			if (mmhotkey == 0) { gfx_PrintStringXY("<None>", 242, 162); }
 			if (mmhotkey == 1) { gfx_PrintStringXY("<[alpha]>", 227, 162); }
@@ -832,20 +822,20 @@ void drawoptions(void) {
 			if (mmhotkey == 3) { gfx_PrintStringXY("<[del]>", 243, 162); }
 
 
-			if (cursorposition == 4) { gfx_SetTextFGColor(selectedcolor); }
-			else { gfx_SetTextFGColor(textcolor); }
+			if (cursorposition == 4) { gfx_SetTextFGColor(SELECTED_COLOR); }
+			else { gfx_SetTextFGColor(TEXT_COLOR); }
 			gfx_PrintStringXY("Enemy HP bar", 145, 177);
 			if (drawhealth == 1) { gfx_PrintStringXY("<ON>", 258, 177); }
 			if (drawhealth == 0) { gfx_PrintStringXY("<OFF>", 250, 177); }
 
-			if (cursorposition == 5) { gfx_SetTextFGColor(selectedcolor); }
-			else { gfx_SetTextFGColor(textcolor); }
+			if (cursorposition == 5) { gfx_SetTextFGColor(SELECTED_COLOR); }
+			else { gfx_SetTextFGColor(TEXT_COLOR); }
 			gfx_PrintStringXY("Damage Nums.", 145, 192);
 			if (damagenumbers == 1) { gfx_PrintStringXY("<ON>", 258, 192); }
 			if (damagenumbers == 0) { gfx_PrintStringXY("<OFF>", 250, 192); }
 
-			if (cursorposition == 6) { gfx_SetTextFGColor(selectedcolor); }
-			else { gfx_SetTextFGColor(textcolor); }
+			if (cursorposition == 6) { gfx_SetTextFGColor(SELECTED_COLOR); }
+			else { gfx_SetTextFGColor(TEXT_COLOR); }
 			gfx_PrintStringXY("[2nd] to SAVE", 145, 207);
 		}
 
@@ -964,8 +954,8 @@ void drawpouch(void) {
 
 	do {
 		gfx_SetDrawBuffer();
-		gfx_FillScreen(submenucolor);
-		gfx_SetColor(accentcolor);
+		gfx_FillScreen(SUBMENU_COLOR);
+		gfx_SetColor(ACCENT_COLOR);
 		gfx_Rectangle(0, 0, 320, 240);
 		gfx_Rectangle(2, 2, 316, 236);
 
@@ -974,7 +964,7 @@ void drawpouch(void) {
 		player_setup[2] = equipped[2];
 		player_setup[3] = equipped[3];
 
-		gfx_SetColor(submenucolor);
+		gfx_SetColor(SUBMENU_COLOR);
 		draweditedplayer();
 		submenubottombar();
 
@@ -1011,7 +1001,7 @@ void updateinventory(void) {
 		//draw rectangle
 		gfx_SetColor(0x00);
 		gfx_FillRectangle(inv_x, inv_y, 20, 20);
-		gfx_SetColor(accentcolor);
+		gfx_SetColor(ACCENT_COLOR);
 		gfx_FillRectangle((inv_x + 2), (inv_y + 2), 16, 16);
 
 		if (inventory[i] != 0) {
@@ -1030,7 +1020,7 @@ void updateinventory(void) {
 void submenubottombar(void) {
 	gfx_SetColor(0x00);
 	gfx_FillRectangle(0, 224, 320, 16);
-	gfx_SetTextFGColor(textcolor);
+	gfx_SetTextFGColor(TEXT_COLOR);
 	gfx_PrintStringXY("[Close]", 80, 228);
 }
 
@@ -1067,15 +1057,15 @@ void playercreate(void) {
 	int keypress;
 	do {
 		gfx_SetDrawBuffer();
-		gfx_FillScreen(menucolor);
-		gfx_SetColor(accentcolor);
+		gfx_FillScreen(MENU_COLOR);
+		gfx_SetColor(ACCENT_COLOR);
 		gfx_Rectangle(0, 0, 320, 240);
 		gfx_Rectangle(2, 2, 316, 236);
 		gfx_HorizLine(0, 223, 320);
 		gfx_HorizLine(0, 221, 320);
-		gfx_SetTextTransparentColor(transcolor);
-		gfx_SetTextFGColor(textcolor);
-		gfx_SetTextBGColor(transcolor);
+		gfx_SetTextTransparentColor(TRANSP_COLOR);
+		gfx_SetTextFGColor(TEXT_COLOR);
+		gfx_SetTextBGColor(TRANSP_COLOR);
 		gfx_SetTextScale(2, 3);
 		gfx_PrintStringXY("1.", 40, 20);
 		gfx_PrintStringXY("2.", 40, 79);
@@ -1083,7 +1073,7 @@ void playercreate(void) {
 		gfx_PrintStringXY("4.", 40, 197);
 		gfx_SetTextScale(1, 1);
 		gfx_PrintStringXY("f(1-5) = change set, # = select item, del = back", 8, 227);
-		gfx_SetTextFGColor(redcolor);
+		gfx_SetTextFGColor(RED_COLOR);
 		gfx_PrintStringXY("This character is for Free Play only!", 4, 4);
 
 		drawequipment();
@@ -1222,8 +1212,8 @@ void drawequipment(void) {
 void menubkgnd(void) {
 	/*
 	gfx_SetDrawBuffer();
-	gfx_FillScreen(menucolor);
-	gfx_SetColor(accentcolor);
+	gfx_FillScreen(MENU_COLOR);
+	gfx_SetColor(ACCENT_COLOR);
 	gfx_Rectangle(0,0,320,240);
 	gfx_Rectangle(2,2,316,236);
 	gfx_SwapDraw();
@@ -1326,7 +1316,7 @@ void updateenemies(void) {
 
 void renderenemy(enemy_t *enemy) {
 	gfx_TransparentSprite(enemySprite, enemy->x - tmap_pxl_x_offset, enemy->y - tmap_pxl_y_offset);
-	gfx_SetTextFGColor(redcolor);
+	gfx_SetTextFGColor(RED_COLOR);
 	if (drawhealth == 1) {
 		gfx_SetTextXY(enemy->x - tmap_pxl_x_offset, enemy->y - tmap_pxl_y_offset);
 		gfx_PrintUInt(enemy->health, 2);

@@ -21,6 +21,8 @@
 #include <graphx.h>
 #include <keypadc.h>
 
+#include "main.h"
+
 int i;
 int goleft;
 int goright;
@@ -40,9 +42,6 @@ int player_mappxlx;
 int player_mappxly;
 int hpbar_length;
 int hpbar_color;
-int greencolor = 0x25;
-int yellowcolor = 0xE7;
-extern int redcolor;
 gfx_sprite_t *weapon;
 gfx_sprite_t *weaponrotated;
 gfx_sprite_t *flippedequip;
@@ -55,7 +54,6 @@ gfx_sprite_t *chestplate;
 gfx_sprite_t *boots;
 
 extern int menuyes;
-extern int textcolor;
 extern uint8_t tilemap_map[];
 extern unsigned int tmap_pxl_x_offset;
 extern unsigned int tmap_pxl_y_offset;
@@ -577,31 +575,31 @@ void checkplayerstatus(void) {
 	if (player_setup[6] > 100) { player_setup[6] = 100; }
 	if ((100 >= player_setup[6]) & (player_setup[6] > 90)) {
 		hpbar_length = 60;
-		hpbar_color = greencolor;
+		hpbar_color = GREEN_COLOR;
 	} else if ((90 >= player_setup[6]) & (player_setup[6] > 80)) {
 		hpbar_length = 54;
-		hpbar_color = greencolor;
+		hpbar_color = GREEN_COLOR;
 	} else if ((80 >= player_setup[6]) & (player_setup[6] > 70)) {
 		hpbar_length = 48;
-		hpbar_color = greencolor;
+		hpbar_color = GREEN_COLOR;
 	} else if ((70 >= player_setup[6]) & (player_setup[6] > 60)) {
 		hpbar_length = 42;
-		hpbar_color = greencolor;
+		hpbar_color = GREEN_COLOR;
 	} else if ((60 >= player_setup[6]) & (player_setup[6] > 50)) {
 		hpbar_length = 36;
-		hpbar_color = yellowcolor;
+		hpbar_color = YELLOW_COLOR;
 	} else if ((50 >= player_setup[6]) & (player_setup[6] > 40)) {
 		hpbar_length = 30;
-		hpbar_color = yellowcolor;
+		hpbar_color = YELLOW_COLOR;
 	} else if ((40 >= player_setup[6]) & (player_setup[6] > 30)) {
 		hpbar_length = 24;
-		hpbar_color = yellowcolor;
+		hpbar_color = YELLOW_COLOR;
 	} else if ((30 >= player_setup[6]) & (player_setup[6] > 20)) {
 		hpbar_length = 18;
-		hpbar_color = redcolor;
+		hpbar_color = RED_COLOR;
 	} else if ((20 >= player_setup[6]) & (player_setup[6] > 10)) {
 		hpbar_length = 12;
-		hpbar_color = redcolor;
+		hpbar_color = RED_COLOR;
 	}
 	if (player_setup[6] <= 0) { youdied(); }
 
@@ -629,7 +627,7 @@ void drawbottombar(void) {
 	gfx_TransparentSprite(health_empty, 80, 224);
 	if ((10 >= player_setup[6]) & (player_setup[6] > 0)) { gfx_TransparentSprite(health10, 80, 224); }
 	gfx_SetTextScale(1, 1);
-	gfx_SetTextFGColor(textcolor);
+	gfx_SetTextFGColor(TEXT_COLOR);
 	gfx_PrintStringXY("[POUCH]  HP:", 4, 228);
 	gfx_PrintStringXY("[STATS]", 150, 228);
 	gfx_PrintStringXY("[STORE]", 208, 228);
@@ -637,11 +635,9 @@ void drawbottombar(void) {
 }
 
 void youdied(void) {
-	extern int menucolor;
-	extern int accentcolor;
 	gfx_SetDrawBuffer();
-	gfx_FillScreen(menucolor);
-	gfx_SetColor(accentcolor);
+	gfx_FillScreen(MENU_COLOR);
+	gfx_SetColor(ACCENT_COLOR);
 	gfx_Rectangle(0, 0, 320, 240);
 	gfx_Rectangle(2, 2, 316, 236);
 	gfx_ScaledTransparentSprite_NoClip(tombstone, 70, 30, 5, 5);

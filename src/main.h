@@ -1,6 +1,17 @@
 #ifndef __MAIN_H_
 #define __MAIN_H_
 
+#define TEXT_COLOR 0xE6
+#define ACCENT_COLOR 0x80
+#define MENU_COLOR 0x00
+#define SUBMENU_COLOR 0x4A
+#define TRANSP_COLOR 0xF8
+#define RED_COLOR 0xE8
+#define GREEN_COLOR 0x25
+#define YELLOW_COLOR 0xE7
+#define GRAY_COLOR 0xAC
+#define SELECTED_COLOR 0xE3
+
 #define TILEMAP_TILE_SIZE 32
 
 #define TILEMAP_WIDTH       40
