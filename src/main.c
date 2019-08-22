@@ -72,10 +72,6 @@ uint8_t *minimapTilesetPointers[tileset_tiles_num];
 gfx_tilemap_t minimapTilemap;
 
 
-//0=naked, 1=leather, 2=chain, 3=steel, 4=dragon (rawr)
-signed int setnumber = 0;
-
-
 /*
 !!!!!!!!!!!!!!!!!!!!!!
 !!!!!!!!!!!!!!!!!!!!!

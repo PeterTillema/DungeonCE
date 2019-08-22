@@ -37,7 +37,7 @@ int editpy = 10;
 extern unsigned int tmap_pxl_x_offset;
 extern unsigned int tmap_pxl_y_offset;
 int mmhotkey = 0;
-extern int damagenumbers;
+bool damagenumbers;
 
 /*
 uint8_t enemytype;
@@ -47,8 +47,8 @@ uint24_t enemyy;
 int enemyhealth;
 */
 
-int drawhealth = 1;
-extern signed int setnumber;
+bool drawhealth = true;
+TYPE_SET_NUMBER setnumber;
 extern uint24_t player_setup[];
 
 extern int mapstartx;
@@ -82,7 +82,6 @@ extern int minimapposition;
 void keywait(void) { while (kb_AnyKey()); }
 
 void mainmenu(void) {
-
 	gfx_SetDrawBuffer();
 	gfx_FillScreen(MENU_COLOR);
 	gfx_SetColor(ACCENT_COLOR);
@@ -138,53 +137,6 @@ void drawsavemenu(void) {
 }
 
 void drawstore(void) {
-	//0
-	int price_leather_helmet = 10;
-	//1
-	int price_leather_tunic = 10;
-	//2
-	int price_leather_boots = 10;
-	//3
-	int price_iron_helmet = 50;
-	//4
-	int price_chain_shirt = 50;
-	//5
-	int price_chain_boots = 50;
-	//6
-	int price_steel_helmet = 100;
-	//7
-	int price_steel_chestplate = 100;
-	//8
-	int price_steel_boots = 100;
-	//9
-	int price_dragon_helmet = 500;
-	//10
-	int price_dragon_chestplate = 500;
-	//11
-	int price_dragon_boots = 500;
-	//12
-	int price_club = 10;
-	//13
-	int price_iron_sword = 50;
-	//14
-	int price_steel_sword = 100;
-	//15
-	int price_dragon_sword = 500;
-	//16
-	int price_basic_bow = 10;
-	//17
-	int price_recurve_bow = 50;
-	//18
-	int price_compound_bow = 100;
-	//19
-	int price_dragon_bow = 500;
-	//20
-	int price_small_potion = 10;
-	//21
-	int price_medium_potion = 50;
-	//22
-	int price_large_potion = 150;
-
 	int cursorposition = 1;
 	int storepage = 1;
 	int storepane = 1;
@@ -209,7 +161,7 @@ void drawstore(void) {
 				if (cursorposition == 1) { gfx_SetTextFGColor(SELECTED_COLOR); }
 				else {
 					gfx_SetTextFGColor(TEXT_COLOR);
-					if (price_leather_helmet > player_setup[7]) {
+					if (PRICE_LEATHER_HELMET > player_setup[7]) {
 						gfx_SetTextFGColor(RED_COLOR);
 					}
 					if (purchased[0] == 1) {
@@ -217,12 +169,12 @@ void drawstore(void) {
 					}
 				}
 				gfx_PrintStringXY("Leather Helmet    ", 150, 132);
-				gfx_PrintInt(price_leather_helmet, 2);
+				gfx_PrintInt(PRICE_LEATHER_HELMET, 2);
 
 				if (cursorposition == 2) { gfx_SetTextFGColor(SELECTED_COLOR); }
 				else {
 					gfx_SetTextFGColor(TEXT_COLOR);
-					if (price_leather_tunic > player_setup[7]) {
+					if (PRICE_LEATHER_TUNIC > player_setup[7]) {
 						gfx_SetTextFGColor(RED_COLOR);
 					}
 					if (purchased[1] == 1) {
@@ -230,12 +182,12 @@ void drawstore(void) {
 					}
 				}
 				gfx_PrintStringXY("Leather Tunic    ", 150, 147);
-				gfx_PrintInt(price_leather_tunic, 2);
+				gfx_PrintInt(PRICE_LEATHER_TUNIC, 2);
 
 				if (cursorposition == 3) { gfx_SetTextFGColor(SELECTED_COLOR); }
 				else {
 					gfx_SetTextFGColor(TEXT_COLOR);
-					if (price_leather_boots > player_setup[7]) {
+					if (PRICE_LEATHER_BOOTS > player_setup[7]) {
 						gfx_SetTextFGColor(RED_COLOR);
 					}
 					if (purchased[2] == 1) {
@@ -243,12 +195,12 @@ void drawstore(void) {
 					}
 				}
 				gfx_PrintStringXY("Leather Boots    ", 150, 162);
-				gfx_PrintInt(price_leather_boots, 2);
+				gfx_PrintInt(PRICE_LEATHER_BOOTS, 2);
 
 				if (cursorposition == 4) { gfx_SetTextFGColor(SELECTED_COLOR); }
 				else {
 					gfx_SetTextFGColor(TEXT_COLOR);
-					if (price_iron_helmet > player_setup[7]) {
+					if (PRICE_IRON_HELMET > player_setup[7]) {
 						gfx_SetTextFGColor(RED_COLOR);
 					}
 					if (purchased[3] == 1) {
@@ -256,12 +208,12 @@ void drawstore(void) {
 					}
 				}
 				gfx_PrintStringXY("Iron Helmet    ", 150, 177);
-				gfx_PrintInt(price_iron_helmet, 2);
+				gfx_PrintInt(PRICE_IRON_HELMET, 2);
 
 				if (cursorposition == 5) { gfx_SetTextFGColor(SELECTED_COLOR); }
 				else {
 					gfx_SetTextFGColor(TEXT_COLOR);
-					if (price_chain_shirt > player_setup[7]) {
+					if (PRICE_CHAIN_SHIRT > player_setup[7]) {
 						gfx_SetTextFGColor(RED_COLOR);
 					}
 					if (purchased[4] == 1) {
@@ -269,13 +221,13 @@ void drawstore(void) {
 					}
 				}
 				gfx_PrintStringXY("Chain Shirt    ", 150, 192);
-				gfx_PrintInt(price_chain_shirt, 2);
+				gfx_PrintInt(PRICE_CHAIN_SHIRT, 2);
 			}
 			if (storepage == 2) {
 				if (cursorposition == 1) { gfx_SetTextFGColor(SELECTED_COLOR); }
 				else {
 					gfx_SetTextFGColor(TEXT_COLOR);
-					if (price_chain_boots > player_setup[7]) {
+					if (PRICE_CHAIN_BOOTS > player_setup[7]) {
 						gfx_SetTextFGColor(RED_COLOR);
 					}
 					if (purchased[5] == 1) {
@@ -283,12 +235,12 @@ void drawstore(void) {
 					}
 				}
 				gfx_PrintStringXY("Chain Boots    ", 150, 132);
-				gfx_PrintInt(price_chain_boots, 2);
+				gfx_PrintInt(PRICE_CHAIN_BOOTS, 2);
 
 				if (cursorposition == 2) { gfx_SetTextFGColor(SELECTED_COLOR); }
 				else {
 					gfx_SetTextFGColor(TEXT_COLOR);
-					if (price_steel_helmet > player_setup[7]) {
+					if (PRICE_STEEL_HELMET > player_setup[7]) {
 						gfx_SetTextFGColor(RED_COLOR);
 					}
 					if (purchased[6] == 1) {
@@ -296,12 +248,12 @@ void drawstore(void) {
 					}
 				}
 				gfx_PrintStringXY("Steel Helmet    ", 150, 147);
-				gfx_PrintInt(price_steel_helmet, 3);
+				gfx_PrintInt(PRICE_STEEL_HELMET, 3);
 
 				if (cursorposition == 3) { gfx_SetTextFGColor(SELECTED_COLOR); }
 				else {
 					gfx_SetTextFGColor(TEXT_COLOR);
-					if (price_steel_chestplate > player_setup[7]) {
+					if (PRICE_STEEL_CHESTPLATE > player_setup[7]) {
 						gfx_SetTextFGColor(RED_COLOR);
 					}
 					if (purchased[7] == 1) {
@@ -309,12 +261,12 @@ void drawstore(void) {
 					}
 				}
 				gfx_PrintStringXY("Steel Chest   ", 150, 162);
-				gfx_PrintInt(price_steel_chestplate, 3);
+				gfx_PrintInt(PRICE_STEEL_CHESTPLATE, 3);
 
 				if (cursorposition == 4) { gfx_SetTextFGColor(SELECTED_COLOR); }
 				else {
 					gfx_SetTextFGColor(TEXT_COLOR);
-					if (price_steel_boots > player_setup[7]) {
+					if (PRICE_STEEL_BOOTS > player_setup[7]) {
 						gfx_SetTextFGColor(RED_COLOR);
 					}
 					if (purchased[8] == 1) {
@@ -322,12 +274,12 @@ void drawstore(void) {
 					}
 				}
 				gfx_PrintStringXY("Steel Boots    ", 150, 177);
-				gfx_PrintInt(price_steel_boots, 3);
+				gfx_PrintInt(PRICE_STEEL_BOOTS, 3);
 
 				if (cursorposition == 5) { gfx_SetTextFGColor(SELECTED_COLOR); }
 				else {
 					gfx_SetTextFGColor(TEXT_COLOR);
-					if (price_dragon_helmet > player_setup[7]) {
+					if (PRICE_DRAGON_HELMET > player_setup[7]) {
 						gfx_SetTextFGColor(RED_COLOR);
 					}
 					if (purchased[9] == 1) {
@@ -336,12 +288,12 @@ void drawstore(void) {
 				}
 				gfx_PrintStringXY("Dragon Helmet    ", 150, 192);
 			}
-			gfx_PrintInt(price_dragon_helmet, 3);
+			gfx_PrintInt(PRICE_DRAGON_HELMET, 3);
 			if (storepage == 3) {
 				if (cursorposition == 1) { gfx_SetTextFGColor(SELECTED_COLOR); }
 				else {
 					gfx_SetTextFGColor(TEXT_COLOR);
-					if (price_dragon_chestplate > player_setup[7]) {
+					if (PRICE_DRAGON_CHESTPLATE > player_setup[7]) {
 						gfx_SetTextFGColor(RED_COLOR);
 					}
 					if (purchased[10] == 1) {
@@ -349,12 +301,12 @@ void drawstore(void) {
 					}
 				}
 				gfx_PrintStringXY("Dragon Chest    ", 150, 132);
-				gfx_PrintInt(price_dragon_chestplate, 3);
+				gfx_PrintInt(PRICE_DRAGON_CHESTPLATE, 3);
 
 				if (cursorposition == 2) { gfx_SetTextFGColor(SELECTED_COLOR); }
 				else {
 					gfx_SetTextFGColor(TEXT_COLOR);
-					if (price_dragon_boots > player_setup[7]) {
+					if (PRICE_DRAGON_BOOTS > player_setup[7]) {
 						gfx_SetTextFGColor(RED_COLOR);
 					}
 					if (purchased[11] == 1) {
@@ -362,7 +314,7 @@ void drawstore(void) {
 					}
 				}
 				gfx_PrintStringXY("Dragon Boots    ", 150, 147);
-				gfx_PrintInt(price_dragon_boots, 3);
+				gfx_PrintInt(PRICE_DRAGON_BOOTS, 3);
 
 				if (cursorposition == 3) { gfx_SetTextFGColor(SELECTED_COLOR); }
 				else { gfx_SetTextFGColor(GRAY_COLOR); }
@@ -384,106 +336,106 @@ void drawstore(void) {
 				else {
 					gfx_SetTextFGColor(TEXT_COLOR);
 				}
-				if (price_club > player_setup[7]) {
+				if (PRICE_CLUB > player_setup[7]) {
 					gfx_SetTextFGColor(RED_COLOR);
 				}
 				if (purchased[12] == 1) {
 					gfx_SetTextFGColor(GREEN_COLOR);
 				}
 				gfx_PrintStringXY("Club    ", 150, 132);
-				gfx_PrintInt(price_club, 2);
+				gfx_PrintInt(PRICE_CLUB, 2);
 
 				if (cursorposition == 2) { gfx_SetTextFGColor(SELECTED_COLOR); }
 				else {
 					gfx_SetTextFGColor(TEXT_COLOR);
 				}
-				if (price_iron_sword > player_setup[7]) {
+				if (PRICE_IRON_SWORD > player_setup[7]) {
 					gfx_SetTextFGColor(RED_COLOR);
 				}
 				if (purchased[13] == 1) {
 					gfx_SetTextFGColor(GREEN_COLOR);
 				}
 				gfx_PrintStringXY("Iron Sword    ", 150, 147);
-				gfx_PrintInt(price_iron_sword, 2);
+				gfx_PrintInt(PRICE_IRON_SWORD, 2);
 
 				if (cursorposition == 3) { gfx_SetTextFGColor(SELECTED_COLOR); }
 				else {
 					gfx_SetTextFGColor(TEXT_COLOR);
 				}
-				if (price_steel_sword > player_setup[7]) {
+				if (PRICE_STEEL_SWORD > player_setup[7]) {
 					gfx_SetTextFGColor(RED_COLOR);
 				}
 				if (purchased[14] == 1) {
 					gfx_SetTextFGColor(GREEN_COLOR);
 				}
 				gfx_PrintStringXY("Steel Sword    ", 150, 162);
-				gfx_PrintInt(price_steel_sword, 3);
+				gfx_PrintInt(PRICE_STEEL_SWORD, 3);
 
 				if (cursorposition == 4) { gfx_SetTextFGColor(SELECTED_COLOR); }
 				else {
 					gfx_SetTextFGColor(TEXT_COLOR);
 				}
-				if (price_dragon_sword > player_setup[7]) {
+				if (PRICE_DRAGON_SWORD > player_setup[7]) {
 					gfx_SetTextFGColor(RED_COLOR);
 				}
 				if (purchased[15] == 1) {
 					gfx_SetTextFGColor(GREEN_COLOR);
 				}
 				gfx_PrintStringXY("Dragon Sword    ", 150, 177);
-				gfx_PrintInt(price_dragon_sword, 4);
+				gfx_PrintInt(PRICE_DRAGON_SWORD, 4);
 
 				if (cursorposition == 5) { gfx_SetTextFGColor(SELECTED_COLOR); }
 				else {
 					gfx_SetTextFGColor(TEXT_COLOR);
 				}
-				if (price_basic_bow > player_setup[7]) {
+				if (PRICE_BASIC_BOW > player_setup[7]) {
 					gfx_SetTextFGColor(RED_COLOR);
 				}
 				if (purchased[16] == 1) {
 					gfx_SetTextFGColor(GREEN_COLOR);
 				}
 				gfx_PrintStringXY("Basic Bow    ", 150, 192);
-				gfx_PrintInt(price_basic_bow, 2);
+				gfx_PrintInt(PRICE_BASIC_BOW, 2);
 			}
 			if (storepage == 2) {
 				if (cursorposition == 1) { gfx_SetTextFGColor(SELECTED_COLOR); }
 				else {
 					gfx_SetTextFGColor(TEXT_COLOR);
 				}
-				if (price_recurve_bow > player_setup[7]) {
+				if (PRICE_RECURVE_BOW > player_setup[7]) {
 					gfx_SetTextFGColor(RED_COLOR);
 				}
 				if (purchased[17] == 1) {
 					gfx_SetTextFGColor(GREEN_COLOR);
 				}
 				gfx_PrintStringXY("Recurve Bow    ", 150, 132);
-				gfx_PrintInt(price_recurve_bow, 2);
+				gfx_PrintInt(PRICE_RECURVE_BOW, 2);
 
 				if (cursorposition == 2) { gfx_SetTextFGColor(SELECTED_COLOR); }
 				else {
 					gfx_SetTextFGColor(TEXT_COLOR);
 				}
-				if (price_compound_bow > player_setup[7]) {
+				if (PRICE_COMPOUND_BOW > player_setup[7]) {
 					gfx_SetTextFGColor(RED_COLOR);
 				}
 				if (purchased[18] == 1) {
 					gfx_SetTextFGColor(GREEN_COLOR);
 				}
 				gfx_PrintStringXY("Compound Bow    ", 150, 147);
-				gfx_PrintInt(price_compound_bow, 3);
+				gfx_PrintInt(PRICE_COMPOUND_BOW, 3);
 
 				if (cursorposition == 3) { gfx_SetTextFGColor(SELECTED_COLOR); }
 				else {
 					gfx_SetTextFGColor(TEXT_COLOR);
 				}
-				if (price_dragon_bow > player_setup[7]) {
+				if (PRICE_DRAGON_BOW > player_setup[7]) {
 					gfx_SetTextFGColor(RED_COLOR);
 				}
 				if (purchased[19] == 1) {
 					gfx_SetTextFGColor(GREEN_COLOR);
 				}
 				gfx_PrintStringXY("Dragon Bow    ", 150, 162);
-				gfx_PrintInt(price_dragon_bow, 3);
+				gfx_PrintInt(PRICE_DRAGON_BOW, 3);
 
 				if (cursorposition == 4) { gfx_SetTextFGColor(SELECTED_COLOR); }
 				else { gfx_SetTextFGColor(GRAY_COLOR); }
@@ -501,31 +453,31 @@ void drawstore(void) {
 				else {
 					gfx_SetTextFGColor(TEXT_COLOR);
 				}
-				if (price_small_potion > player_setup[7]) {
+				if (PRICE_SMALL_POTION > player_setup[7]) {
 					gfx_SetTextFGColor(RED_COLOR);
 				}
 				gfx_PrintStringXY("Small Potion    ", 150, 132);
-				gfx_PrintInt(price_small_potion, 2);
+				gfx_PrintInt(PRICE_SMALL_POTION, 2);
 
 				if (cursorposition == 2) { gfx_SetTextFGColor(SELECTED_COLOR); }
 				else {
 					gfx_SetTextFGColor(TEXT_COLOR);
 				}
-				if (price_medium_potion > player_setup[7]) {
+				if (PRICE_MEDIUM_POTION > player_setup[7]) {
 					gfx_SetTextFGColor(RED_COLOR);
 				}
 				gfx_PrintStringXY("Med. Potion    ", 150, 147);
-				gfx_PrintInt(price_medium_potion, 2);
+				gfx_PrintInt(PRICE_MEDIUM_POTION, 2);
 
 				if (cursorposition == 3) { gfx_SetTextFGColor(SELECTED_COLOR); }
 				else {
 					gfx_SetTextFGColor(TEXT_COLOR);
 				}
-				if (price_large_potion > player_setup[7]) {
+				if (PRICE_LARGE_POTION > player_setup[7]) {
 					gfx_SetTextFGColor(RED_COLOR);
 				}
 				gfx_PrintStringXY("Large Potion    ", 150, 162);
-				gfx_PrintInt(price_large_potion, 3);
+				gfx_PrintInt(PRICE_LARGE_POTION, 3);
 
 				if (cursorposition == 4) { gfx_SetTextFGColor(SELECTED_COLOR); }
 				else { gfx_SetTextFGColor(GRAY_COLOR); }
@@ -588,32 +540,32 @@ void drawstore(void) {
 			if (storepane == 1) {
 				if (storepage == 1) {
 					if (cursorposition == 1) {
-						if (player_setup[7] >= price_leather_helmet) {
-							player_setup[7] = (player_setup[7] - price_leather_helmet);
+						if (player_setup[7] >= PRICE_LEATHER_HELMET) {
+							player_setup[7] = (player_setup[7] - PRICE_LEATHER_HELMET);
 							purchased[0] = 1;
 						}
 					}
 					if (cursorposition == 2) {
-						if (player_setup[7] >= price_leather_tunic) {
-							player_setup[7] = (player_setup[7] - price_leather_tunic);
+						if (player_setup[7] >= PRICE_LEATHER_TUNIC) {
+							player_setup[7] = (player_setup[7] - PRICE_LEATHER_TUNIC);
 							purchased[1] = 1;
 						}
 					}
 					if (cursorposition == 3) {
-						if (player_setup[7] >= price_leather_boots) {
-							player_setup[7] = (player_setup[7] - price_leather_boots);
+						if (player_setup[7] >= PRICE_LEATHER_BOOTS) {
+							player_setup[7] = (player_setup[7] - PRICE_LEATHER_BOOTS);
 							purchased[2] = 1;
 						}
 					}
 					if (cursorposition == 4) {
-						if (player_setup[7] >= price_iron_helmet) {
-							player_setup[7] = (player_setup[7] - price_iron_helmet);
+						if (player_setup[7] >= PRICE_IRON_HELMET) {
+							player_setup[7] = (player_setup[7] - PRICE_IRON_HELMET);
 							purchased[3] = 1;
 						}
 					}
 					if (cursorposition == 5) {
-						if (player_setup[7] >= price_chain_shirt) {
-							player_setup[7] = (player_setup[7] - price_chain_shirt);
+						if (player_setup[7] >= PRICE_CHAIN_SHIRT) {
+							player_setup[7] = (player_setup[7] - PRICE_CHAIN_SHIRT);
 							purchased[4] = 1;
 						}
 					}
@@ -621,46 +573,46 @@ void drawstore(void) {
 				}
 				if (storepage == 2) {
 					if (cursorposition == 1) {
-						if (player_setup[7] >= price_chain_boots) {
-							player_setup[7] = (player_setup[7] - price_chain_boots);
+						if (player_setup[7] >= PRICE_CHAIN_BOOTS) {
+							player_setup[7] = (player_setup[7] - PRICE_CHAIN_BOOTS);
 							purchased[5] = 1;
 						}
 					}
 					if (cursorposition == 2) {
-						if (player_setup[7] >= price_steel_helmet) {
-							player_setup[7] = (player_setup[7] - price_steel_helmet);
+						if (player_setup[7] >= PRICE_STEEL_HELMET) {
+							player_setup[7] = (player_setup[7] - PRICE_STEEL_HELMET);
 							purchased[6] = 1;
 						}
 					}
 					if (cursorposition == 3) {
-						if (player_setup[7] >= price_steel_chestplate) {
-							player_setup[7] = (player_setup[7] - price_steel_chestplate);
+						if (player_setup[7] >= PRICE_STEEL_CHESTPLATE) {
+							player_setup[7] = (player_setup[7] - PRICE_STEEL_CHESTPLATE);
 							purchased[7] = 1;
 						}
 					}
 					if (cursorposition == 4) {
-						if (player_setup[7] >= price_steel_boots) {
-							player_setup[7] = (player_setup[7] - price_steel_boots);
+						if (player_setup[7] >= PRICE_STEEL_BOOTS) {
+							player_setup[7] = (player_setup[7] - PRICE_STEEL_BOOTS);
 							purchased[8] = 1;
 						}
 					}
 					if (cursorposition == 5) {
-						if (player_setup[7] >= price_dragon_helmet) {
-							player_setup[7] = (player_setup[7] - price_dragon_helmet);
+						if (player_setup[7] >= PRICE_DRAGON_HELMET) {
+							player_setup[7] = (player_setup[7] - PRICE_DRAGON_HELMET);
 							purchased[9] = 1;
 						}
 					}
 				}
 				if (storepage == 3) {
 					if (cursorposition == 1) {
-						if (player_setup[7] >= price_dragon_chestplate) {
-							player_setup[7] = (player_setup[7] - price_dragon_chestplate);
+						if (player_setup[7] >= PRICE_DRAGON_CHESTPLATE) {
+							player_setup[7] = (player_setup[7] - PRICE_DRAGON_CHESTPLATE);
 							purchased[10] = 1;
 						}
 					}
 					if (cursorposition == 2) {
-						if (player_setup[7] >= price_dragon_boots) {
-							player_setup[7] = (player_setup[7] - price_dragon_boots);
+						if (player_setup[7] >= PRICE_DRAGON_BOOTS) {
+							player_setup[7] = (player_setup[7] - PRICE_DRAGON_BOOTS);
 							purchased[11] = 1;
 						}
 					}
@@ -669,52 +621,52 @@ void drawstore(void) {
 			if (storepane == 2) {
 				if (storepage == 1) {
 					if (cursorposition == 1) {
-						if (player_setup[7] >= price_club) {
-							player_setup[7] = (player_setup[7] - price_club);
+						if (player_setup[7] >= PRICE_CLUB) {
+							player_setup[7] = (player_setup[7] - PRICE_CLUB);
 							purchased[12] = 1;
 						}
 					}
 					if (cursorposition == 2) {
-						if (player_setup[7] >= price_iron_sword) {
-							player_setup[7] = (player_setup[7] - price_iron_sword);
+						if (player_setup[7] >= PRICE_IRON_SWORD) {
+							player_setup[7] = (player_setup[7] - PRICE_IRON_SWORD);
 							purchased[13] = 1;
 						}
 					}
 					if (cursorposition == 3) {
-						if (player_setup[7] >= price_steel_sword) {
-							player_setup[7] = (player_setup[7] - price_steel_sword);
+						if (player_setup[7] >= PRICE_STEEL_SWORD) {
+							player_setup[7] = (player_setup[7] - PRICE_STEEL_SWORD);
 							purchased[14] = 1;
 						}
 					}
 					if (cursorposition == 4) {
-						if (player_setup[7] >= price_dragon_sword) {
-							player_setup[7] = (player_setup[7] - price_dragon_sword);
+						if (player_setup[7] >= PRICE_DRAGON_SWORD) {
+							player_setup[7] = (player_setup[7] - PRICE_DRAGON_SWORD);
 							purchased[15] = 1;
 						}
 					}
 					if (cursorposition == 5) {
-						if (player_setup[7] >= price_basic_bow) {
-							player_setup[7] = (player_setup[7] - price_basic_bow);
+						if (player_setup[7] >= PRICE_BASIC_BOW) {
+							player_setup[7] = (player_setup[7] - PRICE_BASIC_BOW);
 							purchased[16] = 1;
 						}
 					}
 				}
 				if (storepage == 2) {
 					if (cursorposition == 1) {
-						if (player_setup[7] >= price_recurve_bow) {
-							player_setup[7] = (player_setup[7] - price_recurve_bow);
+						if (player_setup[7] >= PRICE_RECURVE_BOW) {
+							player_setup[7] = (player_setup[7] - PRICE_RECURVE_BOW);
 							purchased[17] = 1;
 						}
 					}
 					if (cursorposition == 2) {
-						if (player_setup[7] >= price_compound_bow) {
-							player_setup[7] = (player_setup[7] - price_compound_bow);
+						if (player_setup[7] >= PRICE_COMPOUND_BOW) {
+							player_setup[7] = (player_setup[7] - PRICE_COMPOUND_BOW);
 							purchased[18] = 1;
 						}
 					}
 					if (cursorposition == 3) {
-						if (player_setup[7] >= price_dragon_bow) {
-							player_setup[7] = (player_setup[7] - price_dragon_bow);
+						if (player_setup[7] >= PRICE_DRAGON_BOW) {
+							player_setup[7] = (player_setup[7] - PRICE_DRAGON_BOW);
 							purchased[19] = 1;
 						}
 					}
@@ -723,20 +675,20 @@ void drawstore(void) {
 			if (storepane == 3) {
 				if (storepage == 1) {
 					if (cursorposition == 1) {
-						if (player_setup[7] >= price_small_potion) {
-							player_setup[7] = (player_setup[7] - price_small_potion);
+						if (player_setup[7] >= PRICE_SMALL_POTION) {
+							player_setup[7] = (player_setup[7] - PRICE_SMALL_POTION);
 							purchased[20]++;
 						}
 					}
 					if (cursorposition == 2) {
-						if (player_setup[7] >= price_medium_potion) {
-							player_setup[7] = (player_setup[7] - price_medium_potion);
+						if (player_setup[7] >= PRICE_MEDIUM_POTION) {
+							player_setup[7] = (player_setup[7] - PRICE_MEDIUM_POTION);
 							purchased[21]++;
 						}
 					}
 					if (cursorposition == 5) {
-						if (player_setup[7] >= price_large_potion) {
-							player_setup[7] = (player_setup[7] - price_large_potion);
+						if (player_setup[7] >= PRICE_LARGE_POTION) {
+							player_setup[7] = (player_setup[7] - PRICE_LARGE_POTION);
 							purchased[22]++;
 						}
 					}
@@ -825,14 +777,14 @@ void drawoptions(void) {
 			if (cursorposition == 4) { gfx_SetTextFGColor(SELECTED_COLOR); }
 			else { gfx_SetTextFGColor(TEXT_COLOR); }
 			gfx_PrintStringXY("Enemy HP bar", 145, 177);
-			if (drawhealth == 1) { gfx_PrintStringXY("<ON>", 258, 177); }
-			if (drawhealth == 0) { gfx_PrintStringXY("<OFF>", 250, 177); }
+			if (drawhealth) { gfx_PrintStringXY("<ON>", 258, 177); }
+			if (!drawhealth) { gfx_PrintStringXY("<OFF>", 250, 177); }
 
 			if (cursorposition == 5) { gfx_SetTextFGColor(SELECTED_COLOR); }
 			else { gfx_SetTextFGColor(TEXT_COLOR); }
 			gfx_PrintStringXY("Damage Nums.", 145, 192);
-			if (damagenumbers == 1) { gfx_PrintStringXY("<ON>", 258, 192); }
-			if (damagenumbers == 0) { gfx_PrintStringXY("<OFF>", 250, 192); }
+			if (damagenumbers) { gfx_PrintStringXY("<ON>", 258, 192); }
+			if (!damagenumbers) { gfx_PrintStringXY("<OFF>", 250, 192); }
 
 			if (cursorposition == 6) { gfx_SetTextFGColor(SELECTED_COLOR); }
 			else { gfx_SetTextFGColor(TEXT_COLOR); }
@@ -864,18 +816,10 @@ void drawoptions(void) {
 					}
 				}
 				if (cursorposition == 4) {
-					if (drawhealth == 1) {
-						drawhealth = 0;
-					} else if (drawhealth == 0) {
-						drawhealth = 1;
-					}
+					drawhealth = !drawhealth;
 				}
 				if (cursorposition == 5) {
-					if (damagenumbers == 1) {
-						damagenumbers = 0;
-					} else if (damagenumbers == 0) {
-						damagenumbers = 1;
-					}
+					damagenumbers = !damagenumbers;
 				}
 			}
 		}
@@ -899,18 +843,10 @@ void drawoptions(void) {
 					}
 				}
 				if (cursorposition == 4) {
-					if (drawhealth == 1) {
-						drawhealth = 0;
-					} else if (drawhealth == 0) {
-						drawhealth = 1;
-					}
+					drawhealth = !drawhealth;
 				}
 				if (cursorposition == 5) {
-					if (damagenumbers == 1) {
-						damagenumbers = 0;
-					} else if (damagenumbers == 0) {
-						damagenumbers = 1;
-					}
+					damagenumbers = !damagenumbers;
 				}
 			}
 		}
@@ -1041,7 +977,7 @@ void newgame(void) {
 	for (i = 0; i < 22; i++) {
 		purchased[i] = 0;
 	}
-	drawhealth = 1;
+	drawhealth = true;
 	showminimap = 1;
 	minimapposition = 1;
 	num_p = 0;
@@ -1084,19 +1020,19 @@ void playercreate(void) {
 		do {
 			keypress = 0;
 			if (kb_Data[1] & kb_Yequ) {
-				(setnumber = 0);
+				setnumber = NAKED;
 				keypress = 1;
 			} else if (kb_Data[1] & kb_Window) {
-				(setnumber = 1);
+				setnumber = LEATHER;
 				keypress = 1;
 			} else if (kb_Data[1] & kb_Zoom) {
-				(setnumber = 2);
+				setnumber = CHAIN;
 				keypress = 1;
 			} else if (kb_Data[1] & kb_Trace) {
-				(setnumber = 3);
+				setnumber = STEEL;
 				keypress = 1;
 			} else if (kb_Data[1] & kb_Graph) {
-				(setnumber = 4);
+				setnumber = DRAGON;
 				keypress = 1;
 			}
 
@@ -1183,25 +1119,26 @@ void draweditedplayer(void) {
 void drawequipment(void) {
 	gfx_SetColor(0x00);
 	gfx_FillRectangle(65, 12, 96, 208);
-	if (setnumber == 1) {
+
+	if (setnumber == LEATHER) {
 		gfx_ScaledTransparentSprite_NoClip(leather_helmet_down, 50, 15, 3, 3);
 		gfx_ScaledTransparentSprite_NoClip(leather_chestplate_down, 50, 25, 3, 3);
 		gfx_ScaledTransparentSprite_NoClip(leather_boots_down, 50, 142, 3, 3);
 		gfx_ScaledTransparentSprite_NoClip(club, editweaponsmallx, editweaponsmally, 2, 2);
 	}
-	if (setnumber == 2) {
+	if (setnumber == CHAIN) {
 		gfx_ScaledTransparentSprite_NoClip(chain_helmet_down, 50, 15, 3, 3);
 		gfx_ScaledTransparentSprite_NoClip(chain_chestplate_down, 50, 25, 3, 3);
 		gfx_ScaledTransparentSprite_NoClip(chain_boots_down, 50, 142, 3, 3);
 		gfx_ScaledTransparentSprite_NoClip(iron_sword, editweaponsmallx, editweaponsmally, 2, 2);
 	}
-	if (setnumber == 3) {
+	if (setnumber == STEEL) {
 		gfx_ScaledTransparentSprite_NoClip(steel_helmet_down, 50, 15, 3, 3);
 		gfx_ScaledTransparentSprite_NoClip(steel_chestplate_down, 50, 25, 3, 3);
 		gfx_ScaledTransparentSprite_NoClip(steel_boots_down, 50, 142, 3, 3);
 		gfx_ScaledTransparentSprite_NoClip(steel_sword, editweaponsmallx, editweaponsmally, 2, 2);
 	}
-	if (setnumber == 4) {
+	if (setnumber == DRAGON) {
 		gfx_ScaledTransparentSprite_NoClip(dragon_helmet_down, 50, 15, 3, 3);
 		gfx_ScaledTransparentSprite_NoClip(dragon_chestplate_down, 50, 25, 3, 3);
 		gfx_ScaledTransparentSprite_NoClip(dragon_boots_down, 50, 142, 3, 3);
@@ -1317,7 +1254,7 @@ void updateenemies(void) {
 void renderenemy(enemy_t *enemy) {
 	gfx_TransparentSprite(enemySprite, enemy->x - tmap_pxl_x_offset, enemy->y - tmap_pxl_y_offset);
 	gfx_SetTextFGColor(RED_COLOR);
-	if (drawhealth == 1) {
+	if (drawhealth) {
 		gfx_SetTextXY(enemy->x - tmap_pxl_x_offset, enemy->y - tmap_pxl_y_offset);
 		gfx_PrintUInt(enemy->health, 2);
 	}

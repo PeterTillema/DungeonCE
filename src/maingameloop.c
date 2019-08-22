@@ -66,7 +66,6 @@ int *inputx;
 int *inputy;
 extern uint24_t player_setup[];
 int dmgmultiplier = 1;
-int damagenumbers = 0;
 int blockchance;
 int walkwait = 1500;
 int w;

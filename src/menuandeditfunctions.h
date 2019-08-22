@@ -1,6 +1,14 @@
 #ifndef MENUANDEDITFUNCTIONS_H
 #define MENUANDEDITFUNCTIONS_H
 
+typedef enum {
+	NAKED,
+	LEATHER,
+	CHAIN,
+	STEEL,
+	DRAGON		// rawr
+} TYPE_SET_NUMBER;
+
 void keywait();
 
 void keyclear();
