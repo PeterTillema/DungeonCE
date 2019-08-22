@@ -44,28 +44,30 @@ void enemyattackhitcheck(void) {
 	extern int player_mappxly;
 	int enemydamage;
 	extern int blockchance;
-	
-	enemydamage = (((enemy[ii].type)+1)*5);
-	if ((attackx == player_mappxlx)&(attacky == player_mappxly)){
-		if (blockchance <= randInt(0,100)) {
+
+	enemydamage = (((enemy[ii].type) + 1) * 5);
+	if ((attackx == player_mappxlx) & (attacky == player_mappxly)) {
+		if (blockchance <= randInt(0, 100)) {
 			gfx_FillScreen(0xE0);
 			player_setup[6] = (player_setup[6] - enemydamage);
-			if (player_setup[6] > 100) {player_setup[6] = 0;}
+			if (player_setup[6] > 100) { player_setup[6] = 0; }
 		}
 	}
 }
+
 void setattack(void) {
-	
-	if ((enemy[ii].type) == 0) {preflip = attack_blue;}
-	if ((enemy[ii].type) == 1) {preflip = attack_green;}
-	if ((enemy[ii].type) == 2) {preflip = attack_red;}
-	if ((enemy[ii].type) == 3) {preflip = bokoblin_light;}
-	if ((enemy[ii].type) == 4) {preflip = bokoblin_dark;}
-	if ((enemy[ii].type) == 5) {preflip = knight_green;}
-	if ((enemy[ii].type) == 6) {preflip = knight_red;}
+
+	if ((enemy[ii].type) == 0) { preflip = attack_blue; }
+	if ((enemy[ii].type) == 1) { preflip = attack_green; }
+	if ((enemy[ii].type) == 2) { preflip = attack_red; }
+	if ((enemy[ii].type) == 3) { preflip = bokoblin_light; }
+	if ((enemy[ii].type) == 4) { preflip = bokoblin_dark; }
+	if ((enemy[ii].type) == 5) { preflip = knight_green; }
+	if ((enemy[ii].type) == 6) { preflip = knight_red; }
 }
-void enemymove (void) {
-	
+
+void enemymove(void) {
+
 	extern unsigned int tmap_pxl_x_offset;
 	extern unsigned int tmap_pxl_y_offset;
 	int enemystartx;
@@ -80,18 +82,18 @@ void enemymove (void) {
 	extern int player_maptiley;
 	extern int player;
 
-	enemystartx = (enemy[ii].x/32);
-	enemystarty = (enemy[ii].y/32);
-	
+	enemystartx = (enemy[ii].x / 32);
+	enemystarty = (enemy[ii].y / 32);
+
 	inputx = &enemystartx;
 	inputy = &enemystarty;
 	player = 2;
-	
+
 	collisionleft();
 	collisionright();
 	collisionup();
 	collisiondown();
-	
+
 	if (goright == 1) {
 		if (enemycoordx <= player_maptilex) {
 			enemy[ii].x = (enemy[ii].x + 32);
@@ -112,7 +114,7 @@ void enemymove (void) {
 			enemy[ii].y = (enemy[ii].y - 32);
 		}
 	}
-	
+
 	/*
 	gfx_PrintStringXY("-",enemy[ii].x - tmap_pxl_x_offset,(enemy[ii].y+36) - tmap_pxl_y_offset);
 	gfx_PrintUInt(goleft,1);
@@ -123,7 +125,7 @@ void enemymove (void) {
 	gfx_PrintString("-");
 	gfx_PrintUInt(godown,1);
 
-	
+
 	gfx_SetTextXY(enemy[ii].x - tmap_pxl_x_offset,(enemy[ii].y+36) - tmap_pxl_y_offset);
 	gfx_PrintInt(enemycoordx,3);
 	gfx_PrintString("-");
@@ -134,23 +136,24 @@ void enemymove (void) {
 	gfx_PrintInt(player_maptiley,3);
 	*/
 }
+
 void enemyattack(void) {
 	gfx_sprite_t *flippedattack;
 	gfx_sprite_t *enemyAttack;
 	extern int tmap_pxl_y_offset;
 	extern int tmap_pxl_x_offset;
 	extern int playerface;
-	
-	if (randcheck == randInt(0,14)) {
-		gfx_UninitedSprite(flippedattack, 32,32);
-		
+
+	if (randcheck == randInt(0, 14)) {
+		gfx_UninitedSprite(flippedattack, 32, 32);
+
 		//attack goes in opposite direction of playerface
 		if (playerface == 3) {
 			//set left
 			setattack();
 			attackx = (enemy[ii].x - 32);
 			attacky = enemy[ii].y;
-			gfx_RotateSpriteCC(preflip,flippedattack);
+			gfx_RotateSpriteCC(preflip, flippedattack);
 			enemyAttack = flippedattack;
 		}
 		if (playerface == 4) {
@@ -165,19 +168,19 @@ void enemyattack(void) {
 			setattack();
 			attackx = (enemy[ii].x + 32);
 			attacky = enemy[ii].y;
-			gfx_RotateSpriteC(preflip,flippedattack);
+			gfx_RotateSpriteC(preflip, flippedattack);
 			enemyAttack = flippedattack;
 		}
 		if (playerface == 2) {
 			//set down
-				setattack();
+			setattack();
 			attackx = enemy[ii].x;
 			attacky = (enemy[ii].y + 32);
-			gfx_FlipSpriteX(preflip,flippedattack);
+			gfx_FlipSpriteX(preflip, flippedattack);
 			enemyAttack = flippedattack;
 		}
-	
-	gfx_TransparentSprite(enemyAttack,attackx - tmap_pxl_x_offset,attacky - tmap_pxl_y_offset);
-	enemyattackhitcheck();
+
+		gfx_TransparentSprite(enemyAttack, attackx - tmap_pxl_x_offset, attacky - tmap_pxl_y_offset);
+		enemyattackhitcheck();
 	}
 }

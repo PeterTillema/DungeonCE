@@ -1,4 +1,7 @@
-obj/
-bin/
-*.log
+/obj
+/bin
 enemy structs help.txt
+/.idea
+/src/gfx/*.c
+/src/gfx/*.h
+/src/gfx/*.log

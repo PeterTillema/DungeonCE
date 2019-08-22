@@ -37,12 +37,12 @@ extern int minimapposition;
 
 void minimap(void) {
 	gfx_sprite_t *playerarrow;
-		int xOffset;
-		int yOffset;
-		int minimapMaxDrawX;
-		int minimapMaxDrawY;
-		int minimapx = 3;
-		int minimapy = 3;
+	int xOffset;
+	int yOffset;
+	int minimapMaxDrawX;
+	int minimapMaxDrawY;
+	int minimapx = 3;
+	int minimapy = 3;
 	//	                /           /                                               
 	//                 /' .,,,,  ./                                                 
 	//                /';'     ,/                                                   
@@ -67,7 +67,7 @@ void minimap(void) {
 
 		xOffset = ((player_mappxlx / TILEMAP_TILE_SIZE) - (MINIMAP_COLS / 2)) * MINIMAP_TILE_SIZE;
 		yOffset = ((player_mappxly / TILEMAP_TILE_SIZE) - (MINIMAP_ROWS / 2)) * MINIMAP_TILE_SIZE;
-		
+
 		if (minimapposition == 1) {
 			minimapx = 3;
 			minimapy = 3;
@@ -84,7 +84,7 @@ void minimap(void) {
 			minimapx = 217;
 			minimapy = 151;
 		}
-		
+
 		minimapMaxDrawX = minimapx + MINIMAP_WIDTH;
 		minimapMaxDrawY = minimapy + MINIMAP_HEIGHT;
 
@@ -119,11 +119,11 @@ void minimap(void) {
 		gfx_FillRectangle_NoClip(minimapx - 2, minimapy - 2, MINIMAP_WIDTH + 4, MINIMAP_HEIGHT + 4);
 		gfx_SetColor(0x00);
 		gfx_FillRectangle_NoClip(minimapx, minimapy, MINIMAP_WIDTH, MINIMAP_HEIGHT);
-		
-		
+
+
 		// draw the minimap
 		gfx_Tilemap(&minimapTilemap, xOffset, yOffset);
-		
+
 		if (playerface == 1) {
 			playerarrow = player_arrow_left;
 		}
@@ -136,8 +136,8 @@ void minimap(void) {
 		if (playerface == 4) {
 			playerarrow = player_arrow_down;
 		}
-			gfx_TransparentSprite(playerarrow , minimapx + 50, minimapy + 35);
-								  
+		gfx_TransparentSprite(playerarrow, minimapx + 50, minimapy + 35);
+
 		// reset the clipping window
 		gfx_SetClipRegion(0, 0, LCD_WIDTH, LCD_HEIGHT);
 	}
