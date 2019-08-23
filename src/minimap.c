@@ -1,36 +1,25 @@
-
-#include "menuandeditfunctions.h"
-#include "maingameloop.h"
-#include "xcollisiondetection.h"
-#include "gfx/tiles_gfx.h"
-#include "gfx/dungeon.h"
-//#include "gfx/dungeon2.h"
-#include "structs.h"
-
+#include <math.h>
+#include <setjmp.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
-#include <tice.h>
-
-#include <math.h>
-#include <setjmp.h>
-#include <fileioc.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <tice.h>
+
+#include <fileioc.h>
 #include <graphx.h>
 #include <keypadc.h>
-
 #include <debug.h>
 
-#include "main.h"
-// include its own header file for the defines
-#include "minimap.h"
+#include "defines.h"
+#include "gfx/dungeon.h"
 
 extern gfx_tilemap_t tilemap;
 extern int player_mappxlx;
 extern int player_mappxly;
-extern int showminimap;
+extern bool showminimap;
 extern gfx_tilemap_t minimapTilemap;
 extern int playerface;
 extern int minimapposition;
@@ -63,7 +52,7 @@ void minimap(void) {
 	//           :   \         ;
 	// KryptonicDragon was here!
 	// ascii art by Ooyamaneko, according to the internet
-	if (showminimap == 1) {
+	if (showminimap) {
 
 		xOffset = ((player_mappxlx / TILEMAP_TILE_SIZE) - (MINIMAP_COLS / 2)) * MINIMAP_TILE_SIZE;
 		yOffset = ((player_mappxly / TILEMAP_TILE_SIZE) - (MINIMAP_ROWS / 2)) * MINIMAP_TILE_SIZE;

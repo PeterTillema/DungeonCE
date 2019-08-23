@@ -1,29 +1,36 @@
-#include "menuandeditfunctions.h"
-#include "maingameloop.h"
-#include "gfx/tiles_gfx.h"
-#include "xcollisiondetection.h"
-#include "structs.h"
-#include "enemymovement.h"
-
+#include <math.h>
+#include <setjmp.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
-#include <tice.h>
-
-#include <math.h>
-#include <setjmp.h>
-#include <fileioc.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <tice.h>
+
+#include <fileioc.h>
 #include <graphx.h>
 #include <keypadc.h>
-#include "gfx/Dungeon.h"
-//#include "gfx/dungeon2.h"
+#include <debug.h>
+
+#include "defines.h"
+
+extern enemy_t enemy[NUM_ENEMIES];
+extern money_t money[NUM_POTS];
+extern pots_t pots[NUM_POTS];
+extern projectile_t projectile[NUM_PROJECTILES];
+
+uint24_t tmap_pxl_x_offset;
+uint24_t tmap_pxl_y_offset;
+
+
+
+
+
 
 int playerdamage;
 extern int i;
-extern uint24_t player_setup[];
+extern player_setup_t player_setup;
 extern int playerface;
 extern int goup;
 extern int godown;
@@ -318,8 +325,8 @@ void playerattackhitcheck(void) {
 
 		if (hit == 1) {
 			if (money[i].moneydead == 0) {
-				player_setup[7] = (player_setup[7] + money[i].moneyvalue);
-				if (player_setup[7] > 99999) { player_setup[7] = 99999; }
+				player_setup.money = (player_setup.money + money[i].moneyvalue);
+				if (player_setup.money > 99999) { player_setup.money = 99999; }
 			}
 			money[i].moneydead = 1;
 		}
@@ -382,7 +389,7 @@ void playerattackhitcheck(void) {
 		if (hit == 1) {
 			if (pots[i].potdead == 0) {
 				if (pots[i].pottype == 1) {
-					player_setup[6] = (player_setup[6] + healthincrement);
+					player_setup.health = (player_setup.health + healthincrement);
 				}
 				money[i].m_x = pots[i].p_x;
 				money[i].m_y = pots[i].p_y;

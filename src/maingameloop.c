@@ -1,27 +1,42 @@
-#include "menuandeditfunctions.h"
-#include "maingameloop.h"
-#include "xcollisiondetection.h"
-#include "gfx/tiles_gfx.h"
-#include "gfx/dungeon.h"
-//#include "gfx/dungeon2.h"
-#include "structs.h"
-#include "minimap.h"
-
+#include <math.h>
+#include <setjmp.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
-#include <tice.h>
-
-#include <math.h>
-#include <setjmp.h>
-#include <fileioc.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <tice.h>
+
+#include <fileioc.h>
 #include <graphx.h>
 #include <keypadc.h>
+#include <debug.h>
 
-#include "main.h"
+#include "defines.h"
+#include "gfx/dungeon.h"
+#include "maingameloop.h"
+#include "menuandeditfunctions.h"
+#include "minimap.h"
+#include "xcollisiondetection.h"
+
+projectile_t projectile[NUM_PROJECTILES];
+pots_t pots[NUM_POTS];
+money_t money[NUM_POTS];
+
+const uint16_t default_potylist[NUM_POTS] = {194, 194};
+// Test map: {97,97, 76, 76,91,91,91,92,92,92,80,80,80,80,80,80,80,71,71,71,71,71,71,71,71,71,71,71,71,71,71,72,72,72,72,72,72,72,72,72,72,72,72,72,72,73,73,73,73,73,73,73,73,73,73,73,73,73,73,74,74,74,74,74,74,74,74,74,74,74,74,74,74,75,75,75,75,75,75,75,75,75,75,75,75,75,75}
+
+const uint16_t default_potxlist[NUM_POTS] = {18, 22};
+// Test map {77,78,106,107,14,15,16,14,15,16,52,53,54,55,56,57,58,21,22,23,24,25,26,27,28,29,30,31,32,33,34,21,22,23,24,25,26,27,28,29,30,31,32,33,34,21,22,23,24,25,26,27,28,29,30,31,32,33,34,21,22,23,24,25,26,27,28,29,30,31,32,33,34,21,22,23,24,25,26,27,28,29,30,31,32,33,34}
+
+int mapstartx = ((TILEMAP_WIDTH / 2) - 5);
+int mapstarty = (TILEMAP_HEIGHT - 10);
+
+
+
+
+
 
 int i;
 int goleft;
@@ -48,41 +63,33 @@ gfx_sprite_t *flippedequip;
 gfx_sprite_t *playerwalk;
 gfx_sprite_t *bootanimation;
 gfx_sprite_t *animation;
-gfx_sprite_t *player_health;
 gfx_sprite_t *helmet;
 gfx_sprite_t *chestplate;
 gfx_sprite_t *boots;
 
-extern int menuyes;
 extern uint8_t tilemap_map[];
 extern unsigned int tmap_pxl_x_offset;
 extern unsigned int tmap_pxl_y_offset;
-extern int mapstartx;
 extern int mapstarty;
-extern int mapshift;
 int player_maptilex;
 int player_maptiley;
 int *inputx;
 int *inputy;
-extern uint24_t player_setup[];
+extern player_setup_t player_setup;
 int dmgmultiplier = 1;
 int blockchance;
 int walkwait = 1500;
 int w;
 int walkspeed = 100;
 int minimapposition = 1;
-extern int menuoption;
 
 extern gfx_tilemap_t tilemap;
-
-extern uint16_t default_potylist[];
-extern uint16_t default_potxlist[];
 
 extern int mmhotkey;
 extern int purchased[];
 extern int equipped[];
 
-int showminimap = 1;
+bool showminimap = true;
 
 int walkanimation = 1;
 int animationcount_min = 1;
@@ -94,54 +101,40 @@ int max_p = 25;
 
 //Start of the game
 void menuloop(void) {
+	while (!kb_IsDown(kb_KeyClear)) {
+		// pick whether to continue or not
+		uint8_t option = mainmenu();
 
-	do {
-		/*pick whether to continue or not*/
-		mainmenu();
+		if (option == 2) {
+			newgame();
+			player_setup.helmet = 0;
+			player_setup.chestplate = 0;
+			player_setup.boots = 0;
+			player_setup.weapon = 0;
+			player_setup.x = 0;
+			player_setup.y = 0;
+			player_setup.health = 100;
+			player_setup.money = 0;
+			maingameloop();
+		}
 
-		//menuyes comes from the mainmenu function
-		//menuyes chunk begin
-		if (menuyes == 1) {
-			if (menuoption == 1) {
-				//loadsave();
-				//maingameloop();
-			}
+		if (option == 4) {
+			playercreate();
+			option = 3;
 		}
-		if (menuyes == 1) {
-			if (menuoption == 2) {
-				newgame();
-				player_setup[0] = 0;
-				player_setup[1] = 0;
-				player_setup[2] = 0;
-				player_setup[3] = 0;
-				player_setup[4] = 0;
-				player_setup[5] = 0;
-				player_setup[6] = 100;
-				player_setup[7] = 0;
-				maingameloop();
-			}
+
+		if (option == 3) {
+			newgame();
+			equipped[0] = player_setup.helmet;
+			equipped[1] = player_setup.chestplate;
+			equipped[2] = player_setup.boots;
+			equipped[3] = player_setup.weapon;
+			maingameloop();
 		}
-		if (menuyes == 1) {
-			if (menuoption == 3) {
-				newgame();
-				equipped[0] = player_setup[0];
-				equipped[1] = player_setup[1];
-				equipped[2] = player_setup[2];
-				equipped[3] = player_setup[3];
-				maingameloop();
-			}
-		}
-		if (menuyes == 1) {
-			if (menuoption == 4) {
-				//options();
-				playercreate();
-			}
-		}
-		//menuyes chunk end
-	} while (!(kb_Data[6] & kb_Clear));
+	};
+
 	gfx_End();
 	exit(0);
-
 }
 
 void maingameloop(void) {
@@ -154,10 +147,6 @@ void maingameloop(void) {
 		(goright = 0);
 		(goup = 0);
 		(godown = 0);
-
-		setmapshift();
-
-		gfx_SetDrawBuffer();
 
 		drawmap();
 		drawcharacter();
@@ -173,35 +162,21 @@ void maingameloop(void) {
 		gfx_SwapDraw();
 
 		mapshifter();
-		if (kb_Data[1] & kb_Yequ) {
+		if (kb_IsDown(kb_KeyYequ)) {
 			drawpouch();
 		}
-		if (kb_Data[1] & kb_Zoom) {
+		if (kb_IsDown(kb_KeyZoom)) {
 			drawstatsmenu();
 		}
-		if (kb_Data[1] & kb_Trace) {
+		if (kb_IsDown(kb_KeyTrace)) {
 			drawstore();
 		}
-		if (kb_Data[1] & kb_Graph) {
+		if (kb_IsDown(kb_KeyGraph)) {
 			drawoptions();
 		}
-		if (kb_Data[2] & kb_Alpha) {
-			if (mmhotkey == 1) {
-				if (showminimap == 1) { showminimap = 0; }
-				else if (showminimap == 0) { showminimap = 1; }
-			}
-		}
-		if (kb_Data[1] & kb_Mode) {
-			if (mmhotkey == 2) {
-				if (showminimap == 1) { showminimap = 0; }
-				else if (showminimap == 0) { showminimap = 1; }
-			}
-		}
-		if (kb_Data[1] & kb_Del) {
-			if (mmhotkey == 3) {
-				if (showminimap == 1) { showminimap = 0; }
-				else if (showminimap == 0) { showminimap = 1; }
-			}
+		if ((kb_IsDown(kb_KeyAlpha) && mmhotkey == 1) || (kb_IsDown(kb_KeyMode) && mmhotkey == 2) ||
+			(kb_IsDown(kb_KeyDel) && mmhotkey == 3)) {
+			showminimap = !showminimap;
 		}
 
 		walkanimation++;
@@ -213,23 +188,11 @@ void maingameloop(void) {
 	menuloop();
 }
 
-void setmapshift(void) {
-	mapshift = 32;
-	/*
-	if (player_setup[2] == 0) {(mapshift = 32);}
-	if (player_setup[2] == 1) {(mapshift = 32);}
-	if (player_setup[2] == 2) {(mapshift = 32);}
-	if (player_setup[2] == 3) {(mapshift = 32);}
-	if (player_setup[2] == 4) {(mapshift = 32);}
-	*/
-}
-
 void drawmap(void) {
 	player_screenpxlx = ((tmap_pxl_x_offset / tmap_pxl_x_offset) + spritexoffset);
 	player_screenpxly = ((tmap_pxl_y_offset / tmap_pxl_y_offset) + spriteyoffset);
 	player_mappxlx = (tmap_pxl_x_offset + (spritexoffset));
 	player_mappxly = (tmap_pxl_y_offset + (spriteyoffset));
-	gfx_SetDrawBuffer();
 	gfx_Tilemap(&tilemap, tmap_pxl_x_offset, tmap_pxl_y_offset);
 	gfx_SetColor(0x00);
 	gfx_FillRectangle(0, 224, 320, 16);
@@ -273,28 +236,28 @@ void mapshifter(void) {
 		(playerface = 1);
 		collisionleft();
 		if (goleft == 1) {
-			(tmap_pxl_x_offset = (tmap_pxl_x_offset - mapshift));
+			(tmap_pxl_x_offset = (tmap_pxl_x_offset - MAP_SHIFT));
 		}
 	}
 	if (kb_Data[7] & kb_Right) {
 		(playerface = 3);
 		collisionright();
 		if (goright == 1) {
-			(tmap_pxl_x_offset = (tmap_pxl_x_offset + mapshift));
+			(tmap_pxl_x_offset = (tmap_pxl_x_offset + MAP_SHIFT));
 		}
 	}
 	if (kb_Data[7] & kb_Up) {
 		(playerface = 2);
 		collisionup();
 		if (goup == 1) {
-			(tmap_pxl_y_offset = (tmap_pxl_y_offset - mapshift));
+			(tmap_pxl_y_offset = (tmap_pxl_y_offset - MAP_SHIFT));
 		}
 	}
 	if (kb_Data[7] & kb_Down) {
 		(playerface = 4);
 		collisiondown();
 		if (godown == 1) {
-			(tmap_pxl_y_offset = (tmap_pxl_y_offset + mapshift));
+			(tmap_pxl_y_offset = (tmap_pxl_y_offset + MAP_SHIFT));
 		}
 	}
 }
@@ -352,56 +315,56 @@ void drawcharacter(void) {
 
 void drawhelmet(void) {
 	gfx_UninitedSprite(flippedequip, 32, 32);
-	if (player_setup[0] == 1) {
+	if (player_setup.helmet == 1) {
 		if (playerface == 1) { helmet = leather_helmet_left; }
 		else if (playerface == 2) { helmet = leather_helmet_up; }
 		else if (playerface == 3) { helmet = (gfx_FlipSpriteY(leather_helmet_left, flippedequip)); }
 		else if (playerface == 4) { helmet = leather_helmet_down; }
-	} else if (player_setup[0] == 2) {
+	} else if (player_setup.helmet == 2) {
 		if (playerface == 1) { helmet = chain_helmet_left; }
 		else if (playerface == 2) { helmet = chain_helmet_up; }
 		else if (playerface == 3) { helmet = (gfx_FlipSpriteY(chain_helmet_left, flippedequip)); }
 		else if (playerface == 4) { helmet = chain_helmet_down; }
-	} else if (player_setup[0] == 3) {
+	} else if (player_setup.helmet == 3) {
 		if (playerface == 1) { helmet = steel_helmet_left; }
 		else if (playerface == 2) { helmet = steel_helmet_up; }
 		else if (playerface == 3) { helmet = (gfx_FlipSpriteY(steel_helmet_left, flippedequip)); }
 		else if (playerface == 4) { helmet = steel_helmet_down; }
-	} else if (player_setup[0] == 4) {
+	} else if (player_setup.helmet == 4) {
 		if (playerface == 1) { helmet = dragon_helmet_left; }
 		else if (playerface == 2) { helmet = dragon_helmet_up; }
 		else if (playerface == 3) { helmet = (gfx_FlipSpriteY(dragon_helmet_left, flippedequip)); }
 		else if (playerface == 4) { helmet = dragon_helmet_down; }
 	}
-	if (player_setup[0] != 0) {
+	if (player_setup.helmet != 0) {
 		gfx_TransparentSprite(helmet, player_screenpxlx, player_screenpxly);
 	}
 }
 
 void drawchestplate(void) {
 	gfx_UninitedSprite(flippedequip, 32, 32);
-	if (player_setup[1] == 1) {
+	if (player_setup.chestplate == 1) {
 		if (playerface == 1) { chestplate = leather_chestplate_left; }
 		else if (playerface == 2) { chestplate = leather_chestplate_up; }
 		else if (playerface == 3) { chestplate = (gfx_FlipSpriteY(leather_chestplate_left, flippedequip)); }
 		else if (playerface == 4) { chestplate = leather_chestplate_down; }
-	} else if (player_setup[1] == 2) {
+	} else if (player_setup.chestplate == 2) {
 		if (playerface == 1) { chestplate = chain_chestplate_left; }
 		else if (playerface == 2) { chestplate = chain_chestplate_up; }
 		else if (playerface == 3) { chestplate = (gfx_FlipSpriteY(chain_chestplate_left, flippedequip)); }
 		else if (playerface == 4) { chestplate = chain_chestplate_down; }
-	} else if (player_setup[1] == 3) {
+	} else if (player_setup.chestplate == 3) {
 		if (playerface == 1) { chestplate = steel_chestplate_left; }
 		else if (playerface == 2) { chestplate = steel_chestplate_up; }
 		else if (playerface == 3) { chestplate = (gfx_FlipSpriteY(steel_chestplate_left, flippedequip)); }
 		else if (playerface == 4) { chestplate = steel_chestplate_down; }
-	} else if (player_setup[1] == 4) {
+	} else if (player_setup.chestplate == 4) {
 		if (playerface == 1) { chestplate = dragon_chestplate_left; }
 		else if (playerface == 2) { chestplate = dragon_chestplate_up; }
 		else if (playerface == 3) { chestplate = (gfx_FlipSpriteY(dragon_chestplate_left, flippedequip)); }
 		else if (playerface == 4) { chestplate = dragon_chestplate_down; }
 	}
-	if (player_setup[1] != 0) {
+	if (player_setup.chestplate != 0) {
 		gfx_TransparentSprite(chestplate, player_screenpxlx, player_screenpxly);
 	}
 }
@@ -409,24 +372,24 @@ void drawchestplate(void) {
 void drawboot(void) {
 	gfx_UninitedSprite(flippedequip, 32, 32);
 	gfx_UninitedSprite(bootanimation, 32, 32);
-	//beck: if player_setup[2] is zero, "boots" will never be set
-	if (player_setup[2]) {
-		if (player_setup[2] == 1) {
+	//beck: if player_setup.boots is zero, "boots" will never be set
+	if (player_setup.boots) {
+		if (player_setup.boots == 1) {
 			if (playerface == 1) { boots = leather_boots_left; }
 			else if (playerface == 2) { boots = leather_boots_up; }
 			else if (playerface == 3) { boots = (gfx_FlipSpriteY(leather_boots_left, flippedequip)); }
 			else if (playerface == 4) { boots = leather_boots_down; }
-		} else if (player_setup[2] == 2) {
+		} else if (player_setup.boots == 2) {
 			if (playerface == 1) { boots = chain_boots_left; }
 			else if (playerface == 2) { boots = chain_boots_up; }
 			else if (playerface == 3) { boots = (gfx_FlipSpriteY(chain_boots_left, flippedequip)); }
 			else if (playerface == 4) { boots = chain_boots_down; }
-		} else if (player_setup[2] == 3) {
+		} else if (player_setup.boots == 3) {
 			if (playerface == 1) { boots = steel_boots_left; }
 			else if (playerface == 2) { boots = steel_boots_up; }
 			else if (playerface == 3) { boots = (gfx_FlipSpriteY(steel_boots_left, flippedequip)); }
 			else if (playerface == 4) { boots = steel_boots_down; }
-		} else if (player_setup[2] == 4) {
+		} else if (player_setup.boots == 4) {
 			if (playerface == 1) { boots = dragon_boots_left; }
 			else if (playerface == 2) { boots = dragon_boots_up; }
 			else if (playerface == 3) { boots = (gfx_FlipSpriteY(dragon_boots_left, flippedequip)); }
@@ -434,7 +397,7 @@ void drawboot(void) {
 		}
 
 		//Only draw the sprite "boots" if it was set.
-		//The only case it gets set is when player_setup[2] is not zero
+		//The only case it gets set is when player_setup.boots is not zero
 		if (walkanimation <= animationcount_mid) {
 			gfx_TransparentSprite(boots, player_screenpxlx, player_screenpxly + 27);
 		} else if (walkanimation > animationcount_mid) {
@@ -444,7 +407,7 @@ void drawboot(void) {
 			if ((playerface == 1) || (playerface == 3)) {
 				bootanimation = boots;
 			}
-			if (player_setup[2] != 0) {
+			if (player_setup.boots != 0) {
 				gfx_TransparentSprite(bootanimation, player_screenpxlx, player_screenpxly + 27);
 			}
 		}
@@ -455,51 +418,51 @@ void drawplayerattack(void) {
 	gfx_UninitedSprite(weaponrotated, 32, 32);
 	int p;
 	p = 1;
-	player_setup[3] = 5;
+	player_setup.weapon = 5;
 
 	if (kb_Data[1] & kb_2nd) {
-		if (player_setup[3] == 0) { weapon = fist; }
-		if (player_setup[3] == 1) { weapon = club; }
-		if (player_setup[3] == 2) { weapon = iron_sword; }
-		if (player_setup[3] == 3) { weapon = steel_sword; }
-		if (player_setup[3] == 4) { weapon = dragon_sword; }
-		if (player_setup[3] == 5) { weapon = bow_basic; }
-		if (player_setup[3] == 6) { weapon = bow_recurve; }
-		if (player_setup[3] == 7) { weapon = bow_compound; }
-		if (player_setup[3] == 8) { weapon = bow_dragon; }
+		if (player_setup.weapon == 0) { weapon = fist; }
+		if (player_setup.weapon == 1) { weapon = club; }
+		if (player_setup.weapon == 2) { weapon = iron_sword; }
+		if (player_setup.weapon == 3) { weapon = steel_sword; }
+		if (player_setup.weapon == 4) { weapon = dragon_sword; }
+		if (player_setup.weapon == 5) { weapon = bow_basic; }
+		if (player_setup.weapon == 6) { weapon = bow_recurve; }
+		if (player_setup.weapon == 7) { weapon = bow_compound; }
+		if (player_setup.weapon == 8) { weapon = bow_dragon; }
 
 
 		if (playerface == 1) {
-			if (player_setup[3] < 5) {
+			if (player_setup.weapon < 5) {
 				gfx_TransparentSprite(gfx_RotateSpriteCC(weapon, weaponrotated), player_screenpxlx - 32,
 									  player_screenpxly);
 			}
 		}
 		if (playerface == 2) {
-			if (player_setup[3] < 5) {
+			if (player_setup.weapon < 5) {
 				gfx_TransparentSprite(weapon, player_screenpxlx, player_screenpxly - 32);
 			}
 
 		}
 		if (playerface == 3) {
-			if (player_setup[3] < 5) {
+			if (player_setup.weapon < 5) {
 				gfx_TransparentSprite(gfx_RotateSpriteC(weapon, weaponrotated), player_screenpxlx + 32,
 									  player_screenpxly);
 			}
 
 		}
 		if (playerface == 4) {
-			if (player_setup[3] < 5) {
+			if (player_setup.weapon < 5) {
 				gfx_TransparentSprite(gfx_RotateSpriteHalf(weapon, weaponrotated), player_screenpxlx,
 									  player_screenpxly + 32);
 			}
 		}
 
-		if (player_setup[3] >= 5) {
+		if (player_setup.weapon >= 5) {
 			if (num_p < max_p) {
 				num_p++;
 			}
-			if (player_setup[3] <= 8) {
+			if (player_setup.weapon <= 8) {
 				projectile[num_p].p_type = 1;
 			}
 			projectile[num_p].p_x = player_mappxlx;
@@ -566,53 +529,53 @@ void checkplayerstatus(void) {
 	int i;
 	//checks if you are standing on a spike
 	if ((gfx_GetTile(&tilemap, player_mappxlx, player_mappxly)) == 9) {
-		(player_setup[6] = player_setup[6] - 5);
+		(player_setup.health = player_setup.health - 5);
 		gfx_FillScreen(0xE0);
 	}
 
 	//checks player health and adjusts healthbar
-	if (player_setup[6] > 100) { player_setup[6] = 100; }
-	if ((100 >= player_setup[6]) & (player_setup[6] > 90)) {
+	if (player_setup.health > 100) { player_setup.health = 100; }
+	if ((100 >= player_setup.health) & (player_setup.health > 90)) {
 		hpbar_length = 60;
 		hpbar_color = GREEN_COLOR;
-	} else if ((90 >= player_setup[6]) & (player_setup[6] > 80)) {
+	} else if ((90 >= player_setup.health) & (player_setup.health > 80)) {
 		hpbar_length = 54;
 		hpbar_color = GREEN_COLOR;
-	} else if ((80 >= player_setup[6]) & (player_setup[6] > 70)) {
+	} else if ((80 >= player_setup.health) & (player_setup.health > 70)) {
 		hpbar_length = 48;
 		hpbar_color = GREEN_COLOR;
-	} else if ((70 >= player_setup[6]) & (player_setup[6] > 60)) {
+	} else if ((70 >= player_setup.health) & (player_setup.health > 60)) {
 		hpbar_length = 42;
 		hpbar_color = GREEN_COLOR;
-	} else if ((60 >= player_setup[6]) & (player_setup[6] > 50)) {
+	} else if ((60 >= player_setup.health) & (player_setup.health > 50)) {
 		hpbar_length = 36;
 		hpbar_color = YELLOW_COLOR;
-	} else if ((50 >= player_setup[6]) & (player_setup[6] > 40)) {
+	} else if ((50 >= player_setup.health) & (player_setup.health > 40)) {
 		hpbar_length = 30;
 		hpbar_color = YELLOW_COLOR;
-	} else if ((40 >= player_setup[6]) & (player_setup[6] > 30)) {
+	} else if ((40 >= player_setup.health) & (player_setup.health > 30)) {
 		hpbar_length = 24;
 		hpbar_color = YELLOW_COLOR;
-	} else if ((30 >= player_setup[6]) & (player_setup[6] > 20)) {
+	} else if ((30 >= player_setup.health) & (player_setup.health > 20)) {
 		hpbar_length = 18;
 		hpbar_color = RED_COLOR;
-	} else if ((20 >= player_setup[6]) & (player_setup[6] > 10)) {
+	} else if ((20 >= player_setup.health) & (player_setup.health > 10)) {
 		hpbar_length = 12;
 		hpbar_color = RED_COLOR;
 	}
-	if (player_setup[6] <= 0) { youdied(); }
+	if (player_setup.health <= 0) { youdied(); }
 
 	//determines player_setup
-	player_setup[0] = equipped[0];
-	player_setup[1] = equipped[1];
-	player_setup[2] = equipped[2];
-	player_setup[3] = equipped[3];
+	player_setup.helmet = equipped[0];
+	player_setup.chestplate = equipped[1];
+	player_setup.boots = equipped[2];
+	player_setup.weapon = equipped[3];
 	//determined by weapon
-	playerdamage = player_setup[3] + 1;
+	playerdamage = player_setup.weapon + 1;
 	//helmet and chestplate added together
-	blockchance = ((player_setup[0] + player_setup[1]) * 10);
+	blockchance = ((player_setup.helmet + player_setup.chestplate) * 10);
 	//set by boots
-	//walkspeed = ((player_setup[2]+1)*20);
+	//walkspeed = ((player_setup.boots+1)*20);
 
 
 
@@ -624,7 +587,7 @@ void drawbottombar(void) {
 	gfx_SetColor(hpbar_color);
 	gfx_FillRectangle(80, 227, hpbar_length, 10);
 	gfx_TransparentSprite(health_empty, 80, 224);
-	if ((10 >= player_setup[6]) & (player_setup[6] > 0)) { gfx_TransparentSprite(health10, 80, 224); }
+	if ((10 >= player_setup.health) & (player_setup.health > 0)) { gfx_TransparentSprite(health10, 80, 224); }
 	gfx_SetTextScale(1, 1);
 	gfx_SetTextFGColor(TEXT_COLOR);
 	gfx_PrintStringXY("[POUCH]  HP:", 4, 228);
@@ -634,7 +597,6 @@ void drawbottombar(void) {
 }
 
 void youdied(void) {
-	gfx_SetDrawBuffer();
 	gfx_FillScreen(MENU_COLOR);
 	gfx_SetColor(ACCENT_COLOR);
 	gfx_Rectangle(0, 0, 320, 240);

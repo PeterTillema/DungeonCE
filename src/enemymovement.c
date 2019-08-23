@@ -1,24 +1,22 @@
-#include "menuandeditfunctions.h"
-#include "xcollisiondetection.h"
-#include "maingameloop.h"
-#include "gfx/dungeon.h"
-//#include "gfx/dungeon2.h"
-#include "gfx/dungeon_gfx.h"
-#include "structs.h"
-
+#include <math.h>
+#include <setjmp.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
-#include <tice.h>
-
-#include <math.h>
-#include <setjmp.h>
-#include <fileioc.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <tice.h>
+
+#include <fileioc.h>
 #include <graphx.h>
 #include <keypadc.h>
+#include <debug.h>
+
+#include "defines.h"
+#include "gfx/dungeon.h"
+#include "gfx/dungeon_gfx.h"
+#include "xcollisiondetection.h"
 
 extern enemy_t enemy[];
 extern uint8_t enemytype;
@@ -35,7 +33,7 @@ int randcheck = 1;
 int attackx;
 int attacky;
 
-extern uint24_t player_setup[];
+extern player_setup_t player_setup;
 
 void enemyattackhitcheck(void) {
 	extern int attackx;
@@ -49,14 +47,13 @@ void enemyattackhitcheck(void) {
 	if ((attackx == player_mappxlx) & (attacky == player_mappxly)) {
 		if (blockchance <= randInt(0, 100)) {
 			gfx_FillScreen(0xE0);
-			player_setup[6] = (player_setup[6] - enemydamage);
-			if (player_setup[6] > 100) { player_setup[6] = 0; }
+			player_setup.health = (player_setup.health - enemydamage);
+			if (player_setup.health > 100) { player_setup.health = 0; }
 		}
 	}
 }
 
 void setattack(void) {
-
 	if ((enemy[ii].type) == 0) { preflip = attack_blue; }
 	if ((enemy[ii].type) == 1) { preflip = attack_green; }
 	if ((enemy[ii].type) == 2) { preflip = attack_red; }

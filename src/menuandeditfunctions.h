@@ -1,19 +1,11 @@
 #ifndef MENUANDEDITFUNCTIONS_H
 #define MENUANDEDITFUNCTIONS_H
 
-typedef enum {
-	NAKED,
-	LEATHER,
-	CHAIN,
-	STEEL,
-	DRAGON		// rawr
-} TYPE_SET_NUMBER;
-
 void keywait();
 
 void keyclear();
 
-void mainmenu();
+uint8_t mainmenu();
 
 void menubkgnd();
 

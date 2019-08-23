@@ -1,103 +1,40 @@
-/*
- *--------------------------------------
- * Program Name:CC22 Dungeon
- * Author:Pieman7373
- * License:
- * Description:
- *--------------------------------------
-*/
-
-/* Keep these headers */
+#include <math.h>
+#include <setjmp.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
-#include <tice.h>
-
-#include <math.h>
-#include <setjmp.h>
-#include <fileioc.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <tice.h>
 
+#include <fileioc.h>
 #include <graphx.h>
 #include <keypadc.h>
 #include <debug.h>
 
-#include "menuandeditfunctions.h"
-#include "maingameloop.h"
-#include "xcollisiondetection.h"
-
-#include "structs.h"
+#include "defines.h"
 #include "gfx/dungeon.h"
 #include "gfx/tiles_gfx.h"
-#include "main.h"
-#include "minimap.h"
+#include "maingameloop.h"
+#include "tilemap/tilemapdata.h"
 
-/* Put all your globals here */
-int menuyes;
-int menuoption;
-
-
-int mapshift;
-//player is 5 away
-int mapstartx;
-//player is 4 away
-int mapstarty;
-
-//for tilemap stuff
-#define Y_OFFSET 0
-#define X_OFFSET 0
-
-//distance in pixels from top left of tilemap
-unsigned int tmap_pxl_x_offset;
-unsigned int tmap_pxl_y_offset;
-
-relic_t relic[NUM_RELICS];
-boss_t boss[NUM_BOSS];
-pots_t pots[NUM_POTS];
-money_t money[NUM_POTS];
-enemy_t enemy[NUM_ENEMIES];
-projectile_t projectile[100];
-
-extern uint8_t *dungeon[];
-
-extern uint8_t tilemap_map[];
-//extern uint8_t tilemap_enemies[];
 gfx_tilemap_t tilemap;
-
-// used to hold a scaled tileset for use when drawing the minimap
-uint8_t minimapTileset[tileset_tiles_num][(MINIMAP_TILE_SIZE * MINIMAP_TILE_SIZE) + 2];
-uint8_t *minimapTilesetPointers[tileset_tiles_num];
 gfx_tilemap_t minimapTilemap;
-
-
-/*
-!!!!!!!!!!!!!!!!!!!!!!
-!!!!!!!!!!!!!!!!!!!!!
-RESET PLAYER STATS
-!!!!!!!!!!!!!!!!!!!!
-!!!!!!!!!!!!!!!!!!!!
-*/
-//{0-helmet,1-chestplate,2-boots,3-weapon,4-x,5-y,6-health%,7-money}
-uint24_t player_setup[8] = {0, 0, 0, 0, 0, 0, 100, 0};
-//3,2,2,4,0,0,100,0
-/*
-helmet and chestplate increase the chance of negating enemy damage
-boots make walking faster
-weapon increases damage dealt
-*/
-
+player_setup_t player_setup;
 
 void main(void) {
 	uint8_t i;
-
-	kb_key_t key;
+	gfx_sprite_t **minimapTileset;
+	gfx_sprite_t **minimapTilesetPointers;
 
 	if (!dungeon_init()) { abort(); }
-	//if (!dungeon2_init()) { abort(); }
 
-	/* Initialize the tilemap structure */
+	// Malloc stuff
+	minimapTilesetPointers = (gfx_sprite_t **) malloc(sizeof(uint8_t) * tileset_tiles_num);
+	minimapTileset = (gfx_sprite_t **) malloc(tileset_tiles_num * (MINIMAP_TILE_SIZE * MINIMAP_TILE_SIZE + 2));
+
+	// Initialize the tilemap structure
 	tilemap.map = tilemap_map;
 	tilemap.tiles = tileset_tiles;
 	tilemap.type_width = gfx_tile_32_pixel;
@@ -111,9 +48,9 @@ void main(void) {
 	tilemap.y_loc = Y_OFFSET;
 	tilemap.x_loc = X_OFFSET;
 
-	// initialize the minimap tilemap structure
+	// Initialize the minimap tilemap structure
 	minimapTilemap.map = tilemap_map;
-	minimapTilemap.tiles = ((gfx_sprite_t **) minimapTilesetPointers);
+	minimapTilemap.tiles = minimapTilesetPointers;
 	minimapTilemap.type_width = gfx_tile_no_pow2;
 	minimapTilemap.type_height = gfx_tile_no_pow2;
 	minimapTilemap.tile_height = MINIMAP_TILE_SIZE;
@@ -123,24 +60,27 @@ void main(void) {
 	minimapTilemap.height = TILEMAP_HEIGHT;
 	minimapTilemap.width = TILEMAP_WIDTH;
 
-	// generate all the scaled sprites for the minimap tileset cache
+	// Generate all the scaled sprites for the minimap tileset cache
 	for (i = 0; i < tileset_tiles_num; i++) {
 		minimapTilesetPointers[i] = &minimapTileset[i][0];
-		minimapTileset[i][0] = MINIMAP_TILE_SIZE;
-		minimapTileset[i][1] = MINIMAP_TILE_SIZE;
+		minimapTileset[i]->width = MINIMAP_TILE_SIZE;
+		minimapTileset[i]->height = MINIMAP_TILE_SIZE;
 
-		gfx_ScaleSprite(tilemap.tiles[i], (gfx_sprite_t *) minimapTileset[i]);
+		gfx_ScaleSprite(tilemap.tiles[i], minimapTileset[i]);
 	}
 
+	// Setup the graphics
 	gfx_Begin();
+	gfx_SetDrawBuffer();
 	gfx_SetPalette(tiles_gfx_pal, sizeof_tiles_gfx_pal, 0);
 	gfx_SetTransparentColor(TRANSP_COLOR);
 	kb_SetMode(MODE_3_CONTINUOUS);
 	//gfx_SetTextConfig(1);
 
-	mapstartx = ((TILEMAP_WIDTH / 2) - 5);
-	mapstarty = (TILEMAP_HEIGHT - 10);
+	// Dev: 3,2,2,4,0,0,100,0
+	player_setup.health = 100;
 
+	// Start the main game
 	menuloop();
 
 	gfx_End();

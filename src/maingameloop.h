@@ -9,8 +9,6 @@ void drawmap();
 
 void drawcharacter();
 
-void mapshifter();
-
 void drawplayerattack();
 
 void drawhelmet();
@@ -23,7 +21,7 @@ void checkplayerstatus();
 
 void drawbottombar();
 
-void setmapshift();
+void mapshifter();
 
 void youdied();
 
